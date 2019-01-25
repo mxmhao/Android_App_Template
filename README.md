@@ -8,3 +8,4 @@
 1. [RecyclerView分组的模板代码：recyclerview_group/](https://github.com/mxmhao/Android_App_Template/tree/master/app/src/main/java/template/recyclerview_group)
 2. [自定义HUD指示器模板代码，可以禁止用户交互和允许用户交互：ProgressHUD.java](https://github.com/mxmhao/Android_App_Template/blob/master/app/src/main/java/template/ProgressHUD.java)
 3. [获取本地图片或视频的缩略图：ThumbnailImage.java](https://github.com/mxmhao/Android_App_Template/blob/master/app/src/main/java/template/ThumbnailImage.java)
+4. [安卓8.0官方BottomNavigationView使用的问题：BottomNavigationFragment.java](https://github.com/mxmhao/Android_App_Template/blob/master/app/src/main/java/template/BottomNavigationFragment.java)
