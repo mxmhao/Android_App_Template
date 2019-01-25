@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+//https://www.jianshu.com/p/24278f3259b3
 //https://stackoverflow.com/questions/40176244/how-to-disable-bottomnavigationview-shift-mode
 public class BottomNavigationFragment extends Fragment {
 
