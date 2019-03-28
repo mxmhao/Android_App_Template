@@ -11,3 +11,4 @@
 4. [安卓8.0官方BottomNavigationView使用的问题：BottomNavigationFragment.java](https://github.com/mxmhao/Android_App_Template/blob/master/app/src/main/java/template/BottomNavigationFragment.java)
 5. [Fragment的壳Activity，主要是想App就用这一个Activity就够了，其他的都用Fragment：fragment_activity/](https://github.com/mxmhao/Android_App_Template/tree/master/app/src/main/java/template/fragment_activity)
 6. [使用系统的文件多选：FileMultipleSelectionFragment.java](https://github.com/mxmhao/Android_App_Template/blob/master/app/src/main/java/template/FileMultipleSelectionFragment.java)
+7. [自定义Toast：ToastUtils.java](https://github.com/mxmhao/Android_App_Template/blob/master/app/src/main/java/template/ToastUtils.java)
