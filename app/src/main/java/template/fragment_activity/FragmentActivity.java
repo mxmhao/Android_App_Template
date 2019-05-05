@@ -8,7 +8,7 @@ import android.os.Bundle;
 
 public class FragmentActivity extends Activity {
 
-    public static String FRAGMENT_CLASS = "FragmentClass";
+    public static final String FRAGMENT_CLASS = "FragmentClass";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
