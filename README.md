@@ -3,6 +3,7 @@
 
 ## [工具类，在“/app/src/main/java/utils/”目录下](https://github.com/mxmhao/Android_App_Template/tree/master/app/src/main/java/utils)
 1. [获取全局Context的工具类，无须传入Context：get_context_no_dependence_anything/](https://github.com/mxmhao/Android_App_Template/tree/master/app/src/main/java/utils/get_context_no_dependence_anything)
+2. [Utils工具，包含获取MIME类型，Utils.java，](https://github.com/mxmhao/Android_App_Template/blob/master/app/src/main/java/utils/Utils.java)
 
 ## [模板，在“/app/src/main/java/template/”目录下](https://github.com/mxmhao/Android_App_Template/tree/master/app/src/main/java/template)
 1. [RecyclerView分组的模板代码：recyclerview_group/](https://github.com/mxmhao/Android_App_Template/tree/master/app/src/main/java/template/recyclerview_group)
@@ -12,3 +13,4 @@
 5. [Fragment的壳Activity，主要是想App就用这一个Activity就够了，其他的都用Fragment：fragment_activity/](https://github.com/mxmhao/Android_App_Template/tree/master/app/src/main/java/template/fragment_activity)
 6. [使用系统的文件多选：FileMultipleSelectionFragment.java](https://github.com/mxmhao/Android_App_Template/blob/master/app/src/main/java/template/FileMultipleSelectionFragment.java)
 7. [自定义Toast：ToastUtils.java](https://github.com/mxmhao/Android_App_Template/blob/master/app/src/main/java/template/ToastUtils.java)
+8. [Okhttp3上传或者下载文件的模板：OkHttp3UploadDownload.java](https://github.com/mxmhao/Android_App_Template/blob/master/app/src/main/java/template/OkHttp3UploadDownload.java)
