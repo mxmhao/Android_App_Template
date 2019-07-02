@@ -175,6 +175,7 @@ public class OkHttp3UploadDownload {
                 InputStream inputStream = response.body().byteStream();
                 FileOutputStream fos = null;
                 try {
+                    //方式一：
                     fos = new FileOutputStream(new File("/sdcard/wangshu.jpg"));
                     byte[] buffer = new byte[2048];
                     int len = 0;
@@ -182,6 +183,14 @@ public class OkHttp3UploadDownload {
                         fos.write(buffer, 0, len);
                     }
                     fos.flush();
+
+                    //方式二：
+                    File file = new File("/sdcard/wangshu.jpg");
+                    file.createNewFile();
+                    BufferedSink sink = Okio.buffer(Okio.sink(file));
+//                    BufferedSink sink = Okio.buffer(Okio.appendingSink(file));
+                    sink.writeAll(response.body().source());
+                    sink.close();
                 } catch (IOException e) {
                     if (call.isCanceled()) {
 
@@ -190,6 +199,14 @@ public class OkHttp3UploadDownload {
 
                     } else {
 
+                    }
+                } finally {
+                    if (null != fos) {
+                        try {
+                            fos.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }

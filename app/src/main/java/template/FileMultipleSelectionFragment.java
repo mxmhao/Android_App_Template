@@ -60,8 +60,9 @@ public class FileMultipleSelectionFragment extends Fragment {
 //                Log.i("---getClipData", "onActivityResult: " + getRealFilePath(cr, uri));
             }
         } else {
+            Uri uri = data.getData();//单选
 //            Log.i("---getData", "onActivityResult: " + getRealFilePath(cr, data.getData()));
-            Log.i("---getData", "onActivityResult: " + data.getData().toString());
+            Log.i("---getData", "onActivityResult: " + uri.toString());
         }
     }
 
