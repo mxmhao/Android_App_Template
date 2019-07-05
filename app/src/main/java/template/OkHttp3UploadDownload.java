@@ -32,7 +32,7 @@ public class OkHttp3UploadDownload {
 
     static ResponseBody upload(String url, String filePath, final String fileName) throws Exception {
         OkHttpClient client = new OkHttpClient.Builder()
-                //监控下载进度 方式一：下面还后方式二
+                //监控下载进度 方式一：下面还有方式二
                 .eventListener(new EventListener() {
                     Response mResponse;
 
