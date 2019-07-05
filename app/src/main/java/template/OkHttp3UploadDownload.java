@@ -28,31 +28,32 @@ import okio.BufferedSink;
 import okio.Okio;
 import okio.Source;
 
+//此模板类容未测试过，请谨慎使用
 public class OkHttp3UploadDownload {
 
     static ResponseBody upload(String url, String filePath, final String fileName) throws Exception {
         OkHttpClient client = new OkHttpClient.Builder()
-                //监控下载进度 方式一：下面还有方式二
+                //监控上传进度 方式一：
                 .eventListener(new EventListener() {
-                    Response mResponse;
-
+                    Request mRequest;
                     Timer timer;
+
                     @Override
-                    public void responseHeadersEnd(Call call, Response response) {
-                        //It is an error to access the body of this response
-                        mResponse = response;
+                    public void requestHeadersEnd(Call call, Request request) {
+                        mRequest = request;
                     }
 
                     @Override
-                    public void responseBodyStart(Call call) {
+                    public void requestBodyStart(Call call) {
+                        //Content-Length
                         timer = new Timer();
                         //这里才能使用mResponse.body()
-                        long contentLength = Long.parseLong(mResponse.header("Content-Length"));
-                        timer.schedule(new ProgressTask(mResponse.body(), contentLength), 1000, 1000);
+                        long contentLength = Long.parseLong(mRequest.header("Content-Length"));
+                        timer.schedule(new UploadProgressTask(mRequest.body(), contentLength), 1000, 1000);
                     }
 
                     @Override
-                    public void responseBodyEnd(Call call, long byteCount) {
+                    public void requestBodyEnd(Call call, long byteCount) {
                         timer.cancel();
                     }
                 })
@@ -181,7 +182,33 @@ public class OkHttp3UploadDownload {
     public static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json;charset=utf-8");
 
     private void download() {
-        OkHttpClient ohc = new OkHttpClient();
+        OkHttpClient ohc = new OkHttpClient.Builder()
+                //监控下载进度 方式一：下面还有方式二
+                .eventListener(new EventListener() {
+                    Response mResponse;
+
+                    Timer timer;
+                    @Override
+                    public void responseHeadersEnd(Call call, Response response) {
+                        //It is an error to access the body of this response
+                        mResponse = response;
+                    }
+
+                    @Override
+                    public void responseBodyStart(Call call) {
+                        timer = new Timer();
+                        //这里才能使用mResponse.body()
+                        long contentLength = Long.parseLong(mResponse.header("Content-Length"));
+                        timer.schedule(new DownloadProgressTask(mResponse.body(), contentLength), 1000, 1000);
+                    }
+
+                    @Override
+                    public void responseBodyEnd(Call call, long byteCount) {
+                        timer.cancel();
+                    }
+                })
+                .build();
+
         String url = "http://img.my.csdn.net/uploads/201603/26/1458988468_5804.jpg";
         Request request = new Request.Builder().url(url).build();
         ohc.newCall(request).enqueue(new Callback() {
@@ -204,7 +231,7 @@ public class OkHttp3UploadDownload {
                 //监控下载进度 方式二：
                 Timer timer = new Timer();
                 long contentLength = Long.parseLong(response.header("Content-Length"));
-                timer.schedule(new ProgressTask(response.body(), contentLength), 1000, 1000);
+                timer.schedule(new DownloadProgressTask(response.body(), contentLength), 1000, 1000);
 
                 InputStream inputStream = response.body().byteStream();
                 FileOutputStream fos = null;
@@ -249,12 +276,12 @@ public class OkHttp3UploadDownload {
     }
 }
 
-class ProgressTask extends TimerTask {
+class DownloadProgressTask extends TimerTask {
     private ResponseBody mBody;
     private long lastLen = 0;
     private final long contentLen;
 
-    public ProgressTask(ResponseBody body, Long contentLen) {
+    public DownloadProgressTask(ResponseBody body, Long contentLen) {
         this.mBody = body;
         this.contentLen = contentLen;
     }
@@ -262,6 +289,35 @@ class ProgressTask extends TimerTask {
     @Override
     public void run() {
         long len = mBody.contentLength();//返回-1表示没数据？
+        long reciver = len - lastLen; //这个应该是接收到
+        lastLen = len;
+        //UI更新下载速度
+
+        //
+        if (contentLen == len) {
+            this.cancel();
+        }
+    }
+}
+
+class UploadProgressTask extends TimerTask {
+    private RequestBody mBody;
+    private long lastLen = 0;
+    private final long contentLen;
+
+    public UploadProgressTask(RequestBody body, Long contentLen) {
+        this.mBody = body;
+        this.contentLen = contentLen;
+    }
+
+    @Override
+    public void run() {
+        long len = 0;//返回-1表示没数据？
+        try {
+            len = mBody.contentLength();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         long reciver = len - lastLen; //这个应该是接收到
         lastLen = len;
         //UI更新下载速度
