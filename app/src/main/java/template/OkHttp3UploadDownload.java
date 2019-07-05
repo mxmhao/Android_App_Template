@@ -10,9 +10,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.EventListener;
 import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -28,7 +31,32 @@ import okio.Source;
 public class OkHttp3UploadDownload {
 
     static ResponseBody upload(String url, String filePath, final String fileName) throws Exception {
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = new OkHttpClient.Builder()
+                //监控下载进度 方式一：下面还后方式二
+                .eventListener(new EventListener() {
+                    Response mResponse;
+
+                    Timer timer;
+                    @Override
+                    public void responseHeadersEnd(Call call, Response response) {
+                        //It is an error to access the body of this response
+                        mResponse = response;
+                    }
+
+                    @Override
+                    public void responseBodyStart(Call call) {
+                        timer = new Timer();
+                        //这里才能使用mResponse.body()
+                        long contentLength = Long.parseLong(mResponse.header("Content-Length"));
+                        timer.schedule(new ProgressTask(mResponse.body(), contentLength), 1000, 1000);
+                    }
+
+                    @Override
+                    public void responseBodyEnd(Call call, long byteCount) {
+                        timer.cancel();
+                    }
+                })
+                .build();
 
 
         RequestBody streamBody = new RequestBody() {
@@ -172,6 +200,12 @@ public class OkHttp3UploadDownload {
             @Override
             public void onResponse(Call call, Response response) {//这种方式貌似不太好
 
+                if (!response.isSuccessful()) return;//失败了
+                //监控下载进度 方式二：
+                Timer timer = new Timer();
+                long contentLength = Long.parseLong(response.header("Content-Length"));
+                timer.schedule(new ProgressTask(response.body(), contentLength), 1000, 1000);
+
                 InputStream inputStream = response.body().byteStream();
                 FileOutputStream fos = null;
                 try {
@@ -191,6 +225,7 @@ public class OkHttp3UploadDownload {
 //                    BufferedSink sink = Okio.buffer(Okio.appendingSink(file));
                     sink.writeAll(response.body().source());
                     sink.close();
+
                 } catch (IOException e) {
                     if (call.isCanceled()) {
 
@@ -211,5 +246,29 @@ public class OkHttp3UploadDownload {
                 }
             }
         });
+    }
+}
+
+class ProgressTask extends TimerTask {
+    private ResponseBody mBody;
+    private long lastLen = 0;
+    private final long contentLen;
+
+    public ProgressTask(ResponseBody body, Long contentLen) {
+        this.mBody = body;
+        this.contentLen = contentLen;
+    }
+
+    @Override
+    public void run() {
+        long len = mBody.contentLength();//返回-1表示没数据？
+        long reciver = len - lastLen; //这个应该是接收到
+        lastLen = len;
+        //UI更新下载速度
+
+        //
+        if (contentLen == len) {
+            this.cancel();
+        }
     }
 }
