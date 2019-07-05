@@ -45,9 +45,7 @@ public class OkHttp3UploadDownload {
 
                     @Override
                     public void requestBodyStart(Call call) {
-                        //Content-Length
                         timer = new Timer();
-                        //这里才能使用mResponse.body()
                         long contentLength = Long.parseLong(mRequest.header("Content-Length"));
                         timer.schedule(new UploadProgressTask(mRequest.body(), contentLength), 1000, 1000);
                     }
