@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
+import java.lang.ref.WeakReference;
+
 import test.mxm.android_app_template.R;
 
 public class ProgressHUD {
@@ -59,7 +61,8 @@ public class ProgressHUD {
         dialog = null;
     }
 
-    private static ProgressBar pb;
+    //使用弱引用，可以防止内存泄漏
+    private static WeakReference<ProgressBar> wrpb;
     /**
      * 指示器显示在Activity的DecorView的上面，可以随着Activity的消失而消失，
      * 请在Activity销毁前调用{@link ProgressHUD#dismiss(Activity)}，否则可能造成内存泄漏
@@ -67,7 +70,8 @@ public class ProgressHUD {
      * @see ProgressHUD#dismiss(Activity)
      */
     public static void showOnContent(Activity activity) {
-        pb = initProgressBar(activity);
+        ProgressBar pb = initProgressBar(activity);
+        wrpb = new WeakReference<>(pb);
         ViewGroup vg = (ViewGroup) activity.getWindow().getDecorView().findViewById(android.R.id.content);
         vg.addView(pb);
     }
@@ -77,10 +81,10 @@ public class ProgressHUD {
      * @param activity
      */
     public static void dismiss(Activity activity) {
-        if (null == pb) return;
+        if (null == wrpb || wrpb.get() == null) return;
         ((ViewGroup) activity.getWindow().getDecorView()
-                .findViewById(android.R.id.content)).removeView(pb);
-        pb = null;
+                .findViewById(android.R.id.content)).removeView(wrpb.get());
+        wrpb = null;
     }
 
 
