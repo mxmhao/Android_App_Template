@@ -31,7 +31,7 @@ import okio.Sink;
 import okio.Source;
 import okio.Timeout;
 
-//此模板类容已测试过，请放心使用
+//此模板类容“下载文件”已测试过
 public class OkHttp3UploadDownload {
     Timer timer = new Timer();
 
