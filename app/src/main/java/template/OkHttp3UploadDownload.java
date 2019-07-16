@@ -4,7 +4,6 @@ import android.media.MediaMetadataRetriever;
 import android.webkit.MimeTypeMap;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,35 +23,34 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import okio.Buffer;
 import okio.BufferedSink;
+import okio.BufferedSource;
 import okio.Okio;
+import okio.Sink;
 import okio.Source;
+import okio.Timeout;
 
-//此模板类容未测试过，请谨慎使用
+//此模板类容已测试过，请放心使用
 public class OkHttp3UploadDownload {
+    Timer timer = new Timer();
 
-    static ResponseBody upload(String url, String filePath, final String fileName) throws Exception {
+    ResponseBody upload(String url, String filePath, final String fileName) throws Exception {
         OkHttpClient client = new OkHttpClient.Builder()
-                //监控上传进度 方式一：
                 .eventListener(new EventListener() {
-                    Request mRequest;
-                    Timer timer;
-
                     @Override
                     public void requestHeadersEnd(Call call, Request request) {
-                        mRequest = request;
+                        super.requestHeadersEnd(call, request);
                     }
 
                     @Override
                     public void requestBodyStart(Call call) {
-                        timer = new Timer();
-                        long contentLength = Long.parseLong(mRequest.header("Content-Length"));
-                        timer.schedule(new UploadProgressTask(mRequest.body(), contentLength), 1000, 1000);
+
                     }
 
                     @Override
                     public void requestBodyEnd(Call call, long byteCount) {
-                        timer.cancel();
+                        super.requestBodyEnd(call, byteCount);
                     }
                 })
                 .build();
@@ -73,9 +71,11 @@ public class OkHttp3UploadDownload {
 
             @Override
             public void writeTo(BufferedSink sink) throws IOException {
+                /*
+                //方式一：
                 FileInputStream fis = new FileInputStream(new File(fileName));
                 fis.skip(102400);//跳到指定位置，断点续传
-                /*//方式一：
+
                 int length;
                 byte[] buffer = new byte[8192];
                 OutputStream outputStream = sink.outputStream();
@@ -84,9 +84,22 @@ public class OkHttp3UploadDownload {
                     //或者
                     sink.write(buffer, 0, length);
                 }*/
+
                 //方式二：
-                try (Source source = Okio.source(fis)) {
+                try (BufferedSource source = Okio.buffer(Okio.source(new File(fileName)))) {
+                    source.skip(102400);//跳到指定位置，断点续传
                     sink.writeAll(source);
+                }
+
+                //监听的上传进度
+                try (BufferedSource source = Okio.buffer(Okio.source(new File(fileName)))) {
+                    source.skip(102400);//跳到指定位置，断点续传
+
+                    ProgressSink pSink = new ProgressSink(sink, contentLength());
+                    ProgressTask task = new ProgressTask(pSink);
+                    timer.schedule(task, 1000, 1000);
+                    pSink.writeAll(source);
+                    task.cancel();
                 }
             }
         };
@@ -124,7 +137,6 @@ public class OkHttp3UploadDownload {
                 .build();
 
         Request request = new Request.Builder()
-                .header("Authorization", "efsd3f223rfd;fa;")
                 .url(url)
                 .post(streamBody)
 //                .post(multiBody)
@@ -163,6 +175,8 @@ public class OkHttp3UploadDownload {
         return null;
     }
 
+
+    //-------------------------下载------------------------------------------------------------------
     /**
      * "application/x-www-form-urlencoded"，是默认的MIME内容编码类型，一般可以用于所有的情况，但是在传输比较大的二进制或者文本数据时效率低。
      这时候应该使用"multipart/form-data"。如上传文件或者二进制数据和非ASCII数据。
@@ -181,11 +195,11 @@ public class OkHttp3UploadDownload {
 
     private void download() {
         OkHttpClient ohc = new OkHttpClient.Builder()
-                //监控下载进度 方式一：下面还有方式二
+                //监控下载进度 方式一：需要配合“文件保存方式二”使用，下面还有方式二，推荐使用方式二
                 .eventListener(new EventListener() {
-                    Response mResponse;
+                    /*Response mResponse;
+                    ProgressTask task;
 
-                    Timer timer;
                     @Override
                     public void responseHeadersEnd(Call call, Response response) {
                         //It is an error to access the body of this response
@@ -194,16 +208,16 @@ public class OkHttp3UploadDownload {
 
                     @Override
                     public void responseBodyStart(Call call) {
-                        timer = new Timer();
                         //这里才能使用mResponse.body()
-                        long contentLength = Long.parseLong(mResponse.header("Content-Length"));
-                        timer.schedule(new DownloadProgressTask(mResponse.body(), contentLength), 1000, 1000);
+                        ProgressSource source = new ProgressSource(mResponse.body().source(), mResponse.body().contentLength());
+                        task = new ProgressTask(source);
+                        timer.schedule(task, 1000, 1000);
                     }
 
                     @Override
                     public void responseBodyEnd(Call call, long byteCount) {
-                        timer.cancel();
-                    }
+                        task.cancel();
+                    }*/
                 })
                 .build();
 
@@ -226,15 +240,11 @@ public class OkHttp3UploadDownload {
             public void onResponse(Call call, Response response) {//这种方式貌似不太好
 
                 if (!response.isSuccessful()) return;//失败了
-                //监控下载进度 方式二：
-                Timer timer = new Timer();
-                long contentLength = Long.parseLong(response.header("Content-Length"));
-                timer.schedule(new DownloadProgressTask(response.body(), contentLength), 1000, 1000);
 
                 InputStream inputStream = response.body().byteStream();
                 FileOutputStream fos = null;
                 try {
-                    //方式一：
+                    //文件保存 方式一：
                     fos = new FileOutputStream(new File("/sdcard/wangshu.jpg"));
                     byte[] buffer = new byte[2048];
                     int len = 0;
@@ -243,13 +253,18 @@ public class OkHttp3UploadDownload {
                     }
                     fos.flush();
 
-                    //方式二：
-                    File file = new File("/sdcard/wangshu.jpg");
+                    //监控下载进度 方式二：需要配合“文件保存方式二”使用
+                    ProgressSource source = new ProgressSource(response.body().source(), response.body().contentLength());
+                    ProgressTask task = new ProgressTask(source);
+                    timer.schedule(task, 1000, 1000);
+
+                    //文件保存 方式二：
+                    File file = new File("/sdcard/wangshu.jpg");//文件存放位置
                     file.createNewFile();
-                    BufferedSink sink = Okio.buffer(Okio.sink(file));
-//                    BufferedSink sink = Okio.buffer(Okio.appendingSink(file));
-                    sink.writeAll(response.body().source());
+                    BufferedSink sink = Okio.buffer(Okio.sink(file));//Okio.appendingSink(file)
+                    sink.writeAll(source);
                     sink.close();
+                    task.cancel();
 
                 } catch (IOException e) {
                     if (call.isCanceled()) {
@@ -274,55 +289,131 @@ public class OkHttp3UploadDownload {
     }
 }
 
-class DownloadProgressTask extends TimerTask {
-    private ResponseBody mBody;
+interface Progress {
+    public long getLoadedBytes();
+    public long getTotalBytes();
+}
+
+class ProgressTask extends TimerTask {
+    private Progress progress;
     private long lastLen = 0;
     private final long contentLen;
 
-    public DownloadProgressTask(ResponseBody body, Long contentLen) {
-        this.mBody = body;
-        this.contentLen = contentLen;
+    public ProgressTask(Progress progress) {
+        this.progress = progress;
+        this.contentLen = progress.getTotalBytes();
     }
 
     @Override
     public void run() {
-        long len = mBody.contentLength();//返回-1表示没数据？
-        long reciver = len - lastLen; //这个应该是接收到
-        lastLen = len;
-        //UI更新下载速度
+        long loaded = progress.getLoadedBytes();
+        long reciver = loaded - lastLen; //这个在一秒内接收到的数据，可以当作速度
+        lastLen = loaded;
+        //把速度reciver和进度(lastLen/contentLen)更新到UI
 
-        //
-        if (contentLen == len) {
+        if (contentLen == loaded) {//下载完了
             this.cancel();
         }
     }
 }
 
-class UploadProgressTask extends TimerTask {
-    private RequestBody mBody;
-    private long lastLen = 0;
-    private final long contentLen;
+/**
+ * 此类使用来包装xxx.body().source()，需要配合“文件保存方式二”使用；
+ * 若是要分段并发下载单个文件，请包装xxx.body().byteStream()
+ */
+class ProgressSource implements Source, Progress {
 
-    public UploadProgressTask(RequestBody body, Long contentLen) {
-        this.mBody = body;
-        this.contentLen = contentLen;
+    private Source source;
+    private long loadedBytes = 0;//已下载或者已上传的字节数
+    public final long totalBytes;//总字节数
+
+    public ProgressSource(Source source, long totalBytes) {
+        this.source = source;
+        this.totalBytes = totalBytes;
     }
 
     @Override
-    public void run() {
-        long len = 0;//返回-1表示没数据？
-        try {
-            len = mBody.contentLength();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        long reciver = len - lastLen; //这个应该是接收到
-        lastLen = len;
-        //UI更新下载速度
+    public long read(Buffer sink, long byteCount) throws IOException {
+        long readCount = source.read(sink, byteCount);
+        if (readCount != -1) loadedBytes += readCount;
+        return readCount;
+    }
 
-        //
-        if (contentLen == len) {
-            this.cancel();
+    @Override
+    public Timeout timeout() {
+        return source.timeout();
+    }
+
+    @Override
+    public void close() throws IOException {
+        source.close();
+    }
+
+    @Override
+    public long getLoadedBytes() {
+        return loadedBytes;
+    }
+
+    @Override
+    public long getTotalBytes() {
+        return totalBytes;
+    }
+}
+
+class ProgressSink implements Sink, Progress {
+
+    private BufferedSink sink;
+    private long loadedBytes = 0;//已下载或者已上传的字节数
+    public final long totalBytes;//总字节数
+
+    ProgressSink(BufferedSink sink, long totalBytes) {
+        this.sink = sink;
+        this.totalBytes = totalBytes;
+    }
+
+    @Override
+    public void write(Buffer source, long byteCount) throws IOException {
+        sink.write(source, byteCount);
+        loadedBytes += byteCount;
+    }
+
+    //此方法就是对RealBufferedSink.writeAll方法改造
+    public long writeAll(Source source) throws IOException {
+        if (source == null) throw new IllegalArgumentException("source == null");
+
+        long totalBytesRead = 0;
+        Buffer buffer = sink.buffer();
+        final int size = 8192;//=Segment.SIZE;
+        for (long readCount; (readCount = source.read(buffer, size)) != -1; ) {
+            sink.emitCompleteSegments();
+            totalBytesRead += readCount;
+            loadedBytes += readCount;
         }
+        return totalBytesRead;
+    }
+
+    @Override
+    public void flush() throws IOException {
+        sink.flush();
+    }
+
+    @Override
+    public Timeout timeout() {
+        return sink.timeout();
+    }
+
+    @Override
+    public void close() throws IOException {
+        sink.close();
+    }
+
+    @Override
+    public long getLoadedBytes() {
+        return loadedBytes;
+    }
+
+    @Override
+    public long getTotalBytes() {
+        return totalBytes;
     }
 }
