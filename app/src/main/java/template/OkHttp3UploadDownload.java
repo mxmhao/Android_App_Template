@@ -86,10 +86,10 @@ public class OkHttp3UploadDownload {
                 }*/
 
                 //方式二：
-                try (BufferedSource source = Okio.buffer(Okio.source(new File(fileName)))) {
-                    source.skip(102400);//跳到指定位置，断点续传
-                    sink.writeAll(source);
-                }
+//                try (BufferedSource source = Okio.buffer(Okio.source(new File(fileName)))) {
+//                    source.skip(102400);//跳到指定位置，断点续传
+//                    sink.writeAll(source);
+//                }
 
                 //监听的上传进度
                 try (BufferedSource source = Okio.buffer(Okio.source(new File(fileName)))) {
