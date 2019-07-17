@@ -1,5 +1,5 @@
 # Android_App_Template
-一些安卓App工具类和模板代码，工具类一般可以直接使用，模板类主要用来参考或者直接修改，引入到自己的项目时可能会报错，可自行修改
+一些安卓App工具类和模板代码，工具类一般可以直接使用，模板类主要用来参考或者直接修改，引入到自己的项目时可能会报错，可自行修改；大部分是直接使用官方SDK实现，很小一部分是改造官方SDK实现或者自己实现
 
 ## [工具类，在“/app/src/main/java/utils/”目录下](https://github.com/mxmhao/Android_App_Template/tree/master/app/src/main/java/utils)
 1. [获取全局Context的工具类，无须传入Context：get_context_no_dependence_anything/](https://github.com/mxmhao/Android_App_Template/tree/master/app/src/main/java/utils/get_context_no_dependence_anything)
