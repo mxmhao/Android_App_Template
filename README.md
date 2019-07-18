@@ -16,3 +16,4 @@
 7. [自定义改造Toast：ToastUtils.java](https://github.com/mxmhao/Android_App_Template/blob/master/app/src/main/java/template/ToastUtils.java)
 8. [Okhttp3上传或者下载文件的模板：OkHttp3UploadDownload.java](https://github.com/mxmhao/Android_App_Template/blob/master/app/src/main/java/template/OkHttp3UploadDownload.java)
 9. [WebView常用设置：WebViewActivity.java](https://github.com/mxmhao/Android_App_Template/blob/master/app/src/main/java/template/WebViewActivity.java)
+10. [UDP模板：UDP.java](https://github.com/mxmhao/Android_App_Template/blob/master/app/src/main/java/template/UDP.java)
