@@ -14,7 +14,6 @@ import java.util.TimerTask;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.EventListener;
 import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -37,24 +36,7 @@ public class OkHttp3UploadDownload {
 
     ResponseBody upload(String url, String filePath, final String fileName) throws Exception {
         OkHttpClient client = new OkHttpClient.Builder()
-                .eventListener(new EventListener() {
-                    @Override
-                    public void requestHeadersEnd(Call call, Request request) {
-                        super.requestHeadersEnd(call, request);
-                    }
-
-                    @Override
-                    public void requestBodyStart(Call call) {
-
-                    }
-
-                    @Override
-                    public void requestBodyEnd(Call call, long byteCount) {
-                        super.requestBodyEnd(call, byteCount);
-                    }
-                })
                 .build();
-
 
         RequestBody streamBody = new RequestBody() {
 
@@ -91,7 +73,8 @@ public class OkHttp3UploadDownload {
 //                    sink.writeAll(source);
 //                }
 
-                //监听的上传进度
+                //MultipartBody不让改，否则改造MultipartBody的writeOrCountBytes更好
+                //监听当前body的上传进度
                 try (BufferedSource source = Okio.buffer(Okio.source(new File(fileName)))) {
                     source.skip(102400);//跳到指定位置，断点续传
 
@@ -140,7 +123,7 @@ public class OkHttp3UploadDownload {
                 .url(url)
                 .post(streamBody)
 //                .post(multiBody)
-                .post(formBody)
+//                .post(formBody)
                 .build();
 
         try {
@@ -175,8 +158,7 @@ public class OkHttp3UploadDownload {
         return null;
     }
 
-
-    //-------------------------下载------------------------------------------------------------------
+    //上传时填写的MIME类型
     /**
      * "application/x-www-form-urlencoded"，是默认的MIME内容编码类型，一般可以用于所有的情况，但是在传输比较大的二进制或者文本数据时效率低。
      这时候应该使用"multipart/form-data"。如上传文件或者二进制数据和非ASCII数据。
@@ -193,11 +175,14 @@ public class OkHttp3UploadDownload {
 
     public static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json;charset=utf-8");
 
+
+
+    //-------------------------下载------------------------------------------------------------------
     private void download() {
         OkHttpClient ohc = new OkHttpClient.Builder()
                 //监控下载进度 方式一：需要配合“文件保存方式二”使用，下面还有方式二，推荐使用方式二
-                .eventListener(new EventListener() {
-                    /*Response mResponse;
+                /*.eventListener(new EventListener() {
+                    Response mResponse;
                     ProgressTask task;
 
                     @Override
@@ -217,8 +202,8 @@ public class OkHttp3UploadDownload {
                     @Override
                     public void responseBodyEnd(Call call, long byteCount) {
                         task.cancel();
-                    }*/
-                })
+                    }
+                })*/
                 .build();
 
         String url = "http://img.my.csdn.net/uploads/201603/26/1458988468_5804.jpg";
@@ -385,7 +370,7 @@ class ProgressSink implements Sink, Progress {
         Buffer buffer = sink.buffer();
         final int size = 8192;//=Segment.SIZE;
         for (long readCount; (readCount = source.read(buffer, size)) != -1; ) {
-            sink.emitCompleteSegments();
+            sink.emitCompleteSegments();//这个应该是发射到网络流中
             totalBytesRead += readCount;
             loadedBytes += readCount;
         }
