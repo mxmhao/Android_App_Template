@@ -115,7 +115,7 @@ class UDPReceiver extends Thread {
                 bytes = new byte[1024];
                 dataPacket = new DatagramPacket(bytes, bytes.length);//存放数据的盒子
                 socket.receive(dataPacket);//接收数据包
-                new ParseThread(dataPacket, listener).start();//开线程去解析收到的数据
+                new ParseThread(dataPacket, listener).start();//开线程去解析收到的数据，我这里简单粗暴了点
             }
         } catch (SocketTimeoutException e) {
             //超时不用管
