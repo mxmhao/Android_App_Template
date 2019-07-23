@@ -246,7 +246,7 @@ public class OkHttp3UploadDownload {
                     //文件保存 方式二：
                     File file = new File("/sdcard/wangshu.jpg");//文件存放位置
                     file.createNewFile();
-                    BufferedSink sink = Okio.buffer(Okio.sink(file));//Okio.appendingSink(file)
+                    BufferedSink sink = Okio.buffer(Okio.sink(file));//断点续传Okio.appendingSink(file)
                     sink.writeAll(source);
                     sink.close();
                     task.cancel();
@@ -292,9 +292,9 @@ class ProgressTask extends TimerTask {
     @Override
     public void run() {
         long loaded = progress.getLoadedBytes();
-        long reciver = loaded - lastLen; //这个在一秒内接收到的数据，可以当作速度
+        long bytes = loaded - lastLen; //这个在一秒内接收到的数据，可以当作速度
         lastLen = loaded;
-        //把速度reciver和进度(lastLen/contentLen)更新到UI
+        //把速度bytes和进度(lastLen/contentLen)更新到UI
 
         if (contentLen == loaded) {//下载完了
             this.cancel();
@@ -303,13 +303,13 @@ class ProgressTask extends TimerTask {
 }
 
 /**
- * 此类使用来包装xxx.body().source()，需要配合“文件保存方式二”使用；
- * 若是要分段并发下载单个文件，请包装xxx.body().byteStream()
+ * 此类使用来包装Response.body().source()，需要配合“文件保存方式二”使用；
+ * 若是要分段并发下载单个文件，请包装Response.body().byteStream()
  */
 class ProgressSource implements Source, Progress {
 
     private Source source;
-    private long loadedBytes = 0;//已下载或者已上传的字节数
+    private long loadedBytes = 0;//已下载的字节数
     public final long totalBytes;//总字节数
 
     public ProgressSource(Source source, long totalBytes) {
@@ -319,8 +319,8 @@ class ProgressSource implements Source, Progress {
 
     @Override
     public long read(Buffer sink, long byteCount) throws IOException {
-        long readCount = source.read(sink, byteCount);
-        if (readCount != -1) loadedBytes += readCount;
+        long readCount = source.read(sink, byteCount);//从网络流中读取数据
+        if (readCount != -1) loadedBytes += readCount;//读取的就是下载进度
         return readCount;
     }
 
@@ -348,7 +348,7 @@ class ProgressSource implements Source, Progress {
 class ProgressSink implements Sink, Progress {
 
     private BufferedSink sink;
-    private long loadedBytes = 0;//已下载或者已上传的字节数
+    private long loadedBytes = 0;//已上传的字节数
     public final long totalBytes;//总字节数
 
     ProgressSink(BufferedSink sink, long totalBytes) {
@@ -372,7 +372,7 @@ class ProgressSink implements Sink, Progress {
         for (long readCount; (readCount = source.read(buffer, size)) != -1; ) {
             sink.emitCompleteSegments();//这个应该是发射到网络流中
             totalBytesRead += readCount;
-            loadedBytes += readCount;
+            loadedBytes += readCount;//发送完成才能计算进度
         }
         return totalBytesRead;
     }
