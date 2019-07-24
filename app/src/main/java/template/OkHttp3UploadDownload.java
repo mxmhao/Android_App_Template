@@ -1,6 +1,7 @@
 package template;
 
 import android.media.MediaMetadataRetriever;
+import android.os.Environment;
 import android.webkit.MimeTypeMap;
 
 import java.io.File;
@@ -22,6 +23,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import okhttp3.internal.Util;
 import okio.Buffer;
 import okio.BufferedSink;
 import okio.BufferedSource;
@@ -30,7 +32,7 @@ import okio.Sink;
 import okio.Source;
 import okio.Timeout;
 
-//此模板类容“下载文件”已测试过
+
 public class OkHttp3UploadDownload {
     Timer timer = new Timer();
 
@@ -73,7 +75,6 @@ public class OkHttp3UploadDownload {
 //                    sink.writeAll(source);
 //                }
 
-                //MultipartBody不让改，否则改造MultipartBody的writeOrCountBytes更好
                 //监听当前body的上传进度
                 try (BufferedSource source = Okio.buffer(Okio.source(new File(fileName)))) {
                     source.skip(102400);//跳到指定位置，断点续传
@@ -206,11 +207,20 @@ public class OkHttp3UploadDownload {
                 })*/
                 .build();
 
-        String url = "http://img.my.csdn.net/uploads/201603/26/1458988468_5804.jpg";
+        String url = "http://localhost:8080/1458988468_5804.jpg";
         Request request = new Request.Builder().url(url).build();
         ohc.newCall(request).enqueue(new Callback() {
+
+            ProgressTask task;
+            BufferedSink sink;
+            ProgressSource source;
+
             @Override
             public void onFailure(Call call, IOException e) {
+                if (null != task) task.cancel();
+                Util.closeQuietly(sink);
+                Util.closeQuietly(source);
+
                 if (call.isCanceled()) {
 
                 } else if (e instanceof SocketTimeoutException
@@ -230,7 +240,7 @@ public class OkHttp3UploadDownload {
                 FileOutputStream fos = null;
                 try {
                     //文件保存 方式一：
-                    fos = new FileOutputStream(new File("/sdcard/wangshu.jpg"));
+                    fos = new FileOutputStream(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "test.jpg"));
                     byte[] buffer = new byte[2048];
                     int len = 0;
                     while ((len = inputStream.read(buffer)) != -1) {
@@ -239,17 +249,16 @@ public class OkHttp3UploadDownload {
                     fos.flush();
 
                     //监控下载进度 方式二：需要配合“文件保存方式二”使用
-                    ProgressSource source = new ProgressSource(response.body().source(), response.body().contentLength());
-                    ProgressTask task = new ProgressTask(source);
+                    source = new ProgressSource(response.body().source(), response.body().contentLength());
+                    task = new ProgressTask(source);
                     timer.schedule(task, 1000, 1000);
 
                     //文件保存 方式二：
-                    File file = new File("/sdcard/wangshu.jpg");//文件存放位置
+                    File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "test.jpg");//文件存放位置
                     file.createNewFile();
-                    BufferedSink sink = Okio.buffer(Okio.sink(file));//断点续传Okio.appendingSink(file)
+                    sink = Okio.buffer(Okio.sink(file));//断点续传Okio.appendingSink(file)
                     sink.writeAll(source);
-                    sink.close();
-                    task.cancel();
+                    sink.flush();//这个不要忘了
 
                 } catch (IOException e) {
                     if (call.isCanceled()) {
@@ -268,6 +277,9 @@ public class OkHttp3UploadDownload {
                             e.printStackTrace();
                         }
                     }
+                    if (null != task) task.cancel();
+                    Util.closeQuietly(sink);
+                    Util.closeQuietly(source);
                 }
             }
         });
