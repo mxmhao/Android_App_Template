@@ -79,6 +79,11 @@ public class FileMultipleSelectionFragment extends Fragment {
             // Potentially direct the user to the Market with a Dialog
 //            Toast.makeText(this, "Please install a File Manager.", Toast.LENGTH_SHORT).show();
         }
+
+        //这个是文件夹选择器： https://github.com/googlesamples/android-DirectorySelection
+//        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+//        startActivityForResult(intent, 1);
+
     }
 }
 
