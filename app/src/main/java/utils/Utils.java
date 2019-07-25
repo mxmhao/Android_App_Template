@@ -1,13 +1,14 @@
 package utils;
 
-import android.media.MediaMetadataRetriever;
 import android.webkit.MimeTypeMap;
 
 public class Utils {
     //根据文件路径获取MIME
     public static String getMIME(String path) {
         //方式一：
+        //不建议使用getFileExtensionFromUrl方法，要使用此方法必须对path使用URLEncoder
         String extension = MimeTypeMap.getFileExtensionFromUrl(path).toLowerCase();
+        //这个还是可以用的
         String mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
 
         //方式二：
