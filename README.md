@@ -18,3 +18,4 @@
 9. [WebView常用设置：WebViewActivity.java](https://github.com/mxmhao/Android_App_Template/blob/master/app/src/main/java/template/WebViewActivity.java)
 10. [UDP模板：UDP.java](https://github.com/mxmhao/Android_App_Template/blob/master/app/src/main/java/template/UDP.java)
 11. [给RecyclerView的Item添加上下文菜单(ContextMenu)和点击事件(onClick)模板，极简：RecyclerViewItem.java](https://github.com/mxmhao/Android_App_Template/blob/master/app/src/main/java/template/RecyclerViewItem.java)
+12. [获取外置SD卡（TF卡）的绝对路径：SdcardFragment.java](https://github.com/mxmhao/Android_App_Template/blob/master/app/src/main/java/template/SdcardFragment.java)
