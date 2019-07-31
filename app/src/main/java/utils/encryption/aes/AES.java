@@ -104,11 +104,28 @@ public class AES {
         return new SecretKeySpec(InsecureSHA1PRNGKeyDerivator.deriveInsecureKey(passwordBytes, KEY_SIZE), "AES");
     }
 
+    private static final char[] hex = new char[]{
+        '0', '1', '2', '3', '4', '5', '6', '7',
+        '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
+    };
     //字节数组转16进制字符串
     private static String byte2HexString(byte buf[]) {
+
         StringBuilder sb = new StringBuilder();
+//        String tp;
         for (byte b : buf) {
-            sb.append(String.format("%02X", b & 0xFF));
+            //一：
+//            sb.append(String.format("%02X", b & 0xFF));//性能最差，差的不止一个数量级的
+            //二：性能第三
+//            sb.append(Integer.toHexString((b >>> 4) & 0x0F));//byte会被强转成int类型，从而带来符号问题，所以需要（& 0x0F）
+//            sb.append(Integer.toHexString(b & 0x0F));
+            //三：性能第二
+//            tp = Integer.toHexString(b & 0xFF);//byte会被强转成int类型，同理
+//            if (tp.length() < 2) sb.append('0');
+//            sb.append(tp);
+            //四：性能最好
+            sb.append(hex[(b >>> 4) & 0x0F]);
+            sb.append(hex[b & 0x0F]);
         }
         return sb.toString();
     }
