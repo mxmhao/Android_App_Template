@@ -125,10 +125,7 @@ public class OkHttp3UploadDownload {
             if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
             return response.body();
         } catch (SocketTimeoutException | ConnectException e) {//连接超时，或者断网
-
-        } catch (Exception e) {
-
-        }
+        } catch (Exception e) {}
 
         client.newCall(request).enqueue(new Callback() {//异步
             @Override

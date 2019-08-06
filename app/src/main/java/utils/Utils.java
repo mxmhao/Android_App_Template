@@ -15,7 +15,6 @@ public class Utils {
         /*MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         mmr.setDataSource(path);//path文件要真实存在，远程、本地都可，否则报错
         mime = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE);*/
-
         return mime;
     }
 }
