@@ -88,14 +88,7 @@ public class OkHttp3UploadDownload {
             }
         };
 
-        //方式一：
-        String extension = MimeTypeMap.getFileExtensionFromUrl(filePath).toLowerCase();
-        String mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
-
-        //方式二：
-        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-        mmr.setDataSource(filePath);
-        mime = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE);
+        String mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension("png");
 
         //无法识别的文件用"application/octet-stream"
         RequestBody byteBody = RequestBody.create(MediaType.parse("application/octet-stream"), new byte[23]);
