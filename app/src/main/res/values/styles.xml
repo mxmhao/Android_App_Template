@@ -6,6 +6,24 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <!-- 设置全局alertDialog的主题 -->
+        <!--<item name="alertDialogTheme">@style/AlertDialog</item>-->
+    </style>
+
+    <style name="AlertDialog" parent="android:Theme.Material.Dialog.Alert">
+        <!-- 以下3个可以改变标题、按钮文字的属性 -->
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#ff0000</item>
+        <item name="android:textStyle">bold</item>
+        <!-- 这个可修改消息体文字的颜色 -->
+        <item name="android:textColorPrimary">@android:color/darker_gray</item>
+        <!-- dialog的最小宽度占总屏幕宽度的百分比，这个必须有，否则内容区左右的空白就太小了，但是这里的值无效 -->
+        <item name="android:windowMinWidthMinor"/>
+        <!-- 内容区背景，我用的是圆角矩形 -->
+        <item name="android:windowBackground">@drawable/round_rectangle</item>
+
+        <!-- 按钮上的文字的颜色，以上面的textColor为主 -->
+        <item name="android:colorAccent">#00FF00</item>
     </style>
 
     <style name="NoBackgroundDialog" parent="@android:style/Theme.Dialog">
