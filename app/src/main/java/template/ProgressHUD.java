@@ -31,7 +31,7 @@ public class ProgressHUD {
 
         GradientDrawable drawable = new GradientDrawable();
         drawable.setShape(GradientDrawable.RECTANGLE);
-        drawable.setGradientType(GradientDrawable.LINEAR_GRADIENT);
+//        drawable.setGradientType(GradientDrawable.LINEAR_GRADIENT);//配合setColors使用
         drawable.setColor(Color.argb(185, 0, 0, 0));
         drawable.setCornerRadius(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, activity.getResources().getDisplayMetrics()));
         bar.setBackground(drawable);
