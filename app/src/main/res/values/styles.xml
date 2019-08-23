@@ -26,14 +26,18 @@
         <item name="android:colorAccent">#00FF00</item>
     </style>
 
-    <style name="NoBackgroundDialog" parent="@android:style/Theme.Dialog">
-        <item name="android:windowBackground">@android:color/transparent</item><!--背景透明-->
-        <item name="android:windowFrame">@null</item><!--边框-->
-        <item name="android:windowContentOverlay">@null</item><!-- 是否有遮盖 -->
-        <item name="android:windowAnimationStyle">@null</item>
-        <item name="android:backgroundDimEnabled">false</item><!--模糊-->
-        <item name="android:windowIsTranslucent">true</item><!--半透明-->
+    <style name="NoBackgroundDialog" parent="android:Theme.Material.Dialog.Alert">
+        <!-- dialog的最小宽度占总屏幕宽度的百分比，这个必须有，否则背景太大，但是这里的值无效 -->
+        <item name="android:windowMinWidthMinor"/>
+        <item name="android:windowBackground">@null</item><!-- 内容区背景 -->
+        <item name="android:windowIsTranslucent">true</item><!-- 半透明 -->
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowCloseOnTouchOutside">false</item>
+        <!--<item name="android:background">@null</item>--><!-- 完全不要背景 -->
+        <!-- 这几个是android:Theme.Material.Dialog.Alert默认的 -->
+        <!--<item name="android:backgroundDimEnabled">true</item>--><!-- 模糊，不想要AlertDialog半透明黑色背景请设置false -->
+        <!--<item name="android:windowFrame">@null</item>--><!-- 边框 -->
+        <!--<item name="android:windowContentOverlay">@null</item>--> <!-- 是否有遮盖 -->
+        <!--<item name="android:windowAnimationStyle">@null</item>-->
     </style>
 </resources>

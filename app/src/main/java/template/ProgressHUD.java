@@ -48,8 +48,8 @@ public class ProgressHUD {
         ProgressBar bar = initProgressBar(activity);
         dialog = new AlertDialog.Builder(activity, R.style.NoBackgroundDialog)
                 .setCancelable(false)
+                .setView(bar)
                 .show();
-        dialog.getWindow().setContentView(bar);
     }
 
     /**
