@@ -54,7 +54,7 @@ public class Utils {
                     return;
                 }
 
-                if (ia instanceof Inet6Address && countChar(ip, ':') > 2) {
+                if (ia instanceof Inet6Address && countChar(ip, ':') > 1) {
                     //是IPv6地址，拼接端口号时单独处理
                 } else {
                     //其他的包括IPv4、url拼接端口号时的处理都相同
