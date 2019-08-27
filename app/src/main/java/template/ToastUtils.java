@@ -49,7 +49,6 @@ public class ToastUtils {
 
             GradientDrawable drawable = new GradientDrawable();
             drawable.setShape(GradientDrawable.RECTANGLE);
-            drawable.setGradientType(GradientDrawable.RECTANGLE);
             drawable.setColor(Color.argb(185, 0, 0, 0));
             drawable.setCornerRadius(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, context.getResources().getDisplayMetrics()));
 
