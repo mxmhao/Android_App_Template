@@ -82,8 +82,9 @@ public class ProgressHUD {
      */
     public static void dismiss(Activity activity) {
         if (null == wrpb || wrpb.get() == null) return;
-        ((ViewGroup) activity.getWindow().getDecorView()
-                .findViewById(android.R.id.content)).removeView(wrpb.get());
+//        ((ViewGroup) activity.getWindow().getDecorView()
+//                .findViewById(android.R.id.content)).removeView(wrpb.get());
+        ((ViewGroup) wrpb.get().getParent()).removeView(wrpb.get());
         wrpb = null;
     }
 
