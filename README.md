@@ -21,3 +21,4 @@
 11. [给RecyclerView的Item添加上下文菜单(ContextMenu)和点击事件(onClick)模板，极简：RecyclerViewItem.java](/app/src/main/java/template/RecyclerViewItem.java)
 12. [获取外置SD卡（TF卡）的绝对路径：SdcardFragment.java](/app/src/main/java/template/SdcardFragment.java)
 13. [修改AlertDialog的主题：AlertDialogTheme.java](/app/src/main/java/template/AlertDialogTheme.java)、[R.style.AlertDialog](/app/src/main/res/values/styles.xml)
+14. [仿iOS的弹出框，但API和AlertDialog.Builder一致：AlertDialogTheme.java#Builder](/app/src/main/java/template/AlertDialogTheme.java)、[R.style.AlertDialogTheme](/app/src/main/res/values/styles.xml)

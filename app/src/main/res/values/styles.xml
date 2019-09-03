@@ -9,34 +9,41 @@
         <!-- 设置全局alertDialog的主题 -->
         <!--<item name="alertDialogTheme">@style/AlertDialog</item>-->
     </style>
+    <!-- DarkActionBar主题的alertDialogTheme默认设置的是android:ThemeOverlay.Material.Dialog.Alert -->
 
-    <style name="AlertDialog" parent="android:Theme.Material.Dialog.Alert">
+    <style name="AlertDialog" parent="android:ThemeOverlay.Material.Dialog.Alert">
         <!-- 以下3个可以改变标题、按钮文字的属性 -->
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">#ff0000</item>
         <item name="android:textStyle">bold</item>
         <!-- 这个可修改消息体文字的颜色 -->
         <item name="android:textColorPrimary">@android:color/darker_gray</item>
-        <!-- dialog的最小宽度占总屏幕宽度的百分比，这个必须有，否则内容区左右的空白就太小了，但是这里的值无效 -->
-        <item name="android:windowMinWidthMinor"/>
         <!-- 内容区背景，我用的是圆角矩形 -->
         <item name="android:windowBackground">@drawable/round_rectangle</item>
 
         <!-- 按钮上的文字的颜色，以上面的textColor为主 -->
         <item name="android:colorAccent">#00FF00</item>
+
+        <!-- dialog的最小宽度占总屏幕宽度的百分比，这个必须有，否则内容区左右的空白就太小了，但是这里的值无效 -->
+        <item name="android:windowMinWidthMinor"/>
     </style>
 
-    <style name="NoBackgroundDialog" parent="android:Theme.Material.Dialog.Alert">
+    <style name="NoBackgroundDialog" parent="android:ThemeOverlay.Material.Dialog.Alert">
+        <item name="android:windowBackground">@null</item><!-- 内容区背景 -->
         <!-- dialog的最小宽度占总屏幕宽度的百分比，这个必须有，否则背景太大，但是这里的值无效 -->
         <item name="android:windowMinWidthMinor"/>
-        <item name="android:windowBackground">@null</item><!-- 内容区背景 -->
-        <item name="android:windowIsTranslucent">true</item><!-- 半透明 -->
-        <item name="android:windowNoTitle">true</item>
         <!--<item name="android:background">@null</item>--><!-- 完全不要背景 -->
+        <!-- 这几个是android:ThemeOverlay.Material.Dialog.Alert默认的 -->
+        <!--<item name="android:windowIsTranslucent">true</item>--> <!-- 半透明 -->
+        <!--<item name="android:windowNoTitle">true</item>-->
         <!-- 这几个是android:Theme.Material.Dialog.Alert默认的 -->
         <!--<item name="android:backgroundDimEnabled">true</item>--><!-- 模糊，不想要AlertDialog半透明黑色背景请设置false -->
         <!--<item name="android:windowFrame">@null</item>--><!-- 边框 -->
         <!--<item name="android:windowContentOverlay">@null</item>--> <!-- 是否有遮盖 -->
         <!--<item name="android:windowAnimationStyle">@null</item>-->
+    </style>
+
+    <style name="AlertDialogTheme" parent="android:ThemeOverlay.Material.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/sh_2_btn_alert_bg</item><!--内容区背景-->
     </style>
 </resources>

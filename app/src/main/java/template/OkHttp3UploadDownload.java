@@ -1,6 +1,5 @@
 package template;
 
-import android.media.MediaMetadataRetriever;
 import android.os.Environment;
 import android.webkit.MimeTypeMap;
 
@@ -131,19 +130,13 @@ public class OkHttp3UploadDownload {
             @Override
             public void onFailure(Call call, IOException e) {
                 if (call.isCanceled()) {
-
                 } else if (e instanceof SocketTimeoutException
                         || e instanceof ConnectException) {//连接超时，或者断网
-
-                } else {
-
-                }
+                } else {}
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-
-            }
+            public void onResponse(Call call, Response response) throws IOException {}
         });
 
         return null;
@@ -212,13 +205,9 @@ public class OkHttp3UploadDownload {
                 Util.closeQuietly(source);
 
                 if (call.isCanceled()) {
-
                 } else if (e instanceof SocketTimeoutException
                         || e instanceof ConnectException) {//连接超时，或者断网
-
-                } else {
-
-                }
+                } else {}
             }
 
             @Override
@@ -255,10 +244,7 @@ public class OkHttp3UploadDownload {
 
                     } else if (e instanceof SocketTimeoutException
                             || e instanceof ConnectException) {//连接超时，或者断网
-
-                    } else {
-
-                    }
+                    } else {}
                 } finally {
                     if (null != fos) {
                         try {
@@ -277,8 +263,8 @@ public class OkHttp3UploadDownload {
 }
 
 interface Progress {
-    public long getLoadedBytes();
-    public long getTotalBytes();
+    long getLoadedBytes();
+    long getTotalBytes();
 }
 
 class ProgressTask extends TimerTask {
