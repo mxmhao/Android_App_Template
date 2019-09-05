@@ -1,5 +1,8 @@
 package utils;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.webkit.MimeTypeMap;
 
 import java.net.Inet6Address;
@@ -69,5 +72,23 @@ public class Utils {
             count++;
         }
         return count;
+    }
+
+    /**
+     * 分享到邮件
+     * https://blog.csdn.net/qq_23892379/article/details/80911994
+     * @param activity
+     * @param title 标题
+     * @param message 内容
+     */
+    public static void emailShare(Activity activity, String title, String message) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SENDTO);//设置分享行为
+        intent.setType("text/plain");//设置分享内容的类型
+        //这行是必须的，否则无法调起Gmail
+        intent.setData(Uri.parse("mailto:"));//后面可添加完整的Email地址
+        intent.putExtra(Intent.EXTRA_SUBJECT, title);//添加标题
+        intent.putExtra(Intent.EXTRA_TEXT, message);//添加分享内容
+        activity.startActivity(intent);
     }
 }
