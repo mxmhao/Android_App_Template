@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.InsetDrawable;
-import android.support.annotation.StringRes;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
@@ -14,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.annotation.StringRes;
 
 import test.mxm.android_app_template.R;
 

@@ -2,11 +2,14 @@ package utils.get_context_no_dependence_anything;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
-import android.support.annotation.NonNull;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+
+import test.mxm.android_app_template.BuildConfig;
 
 /**
  * 借用的源码：
@@ -31,8 +34,10 @@ public class Applications {
             return CURRENT;
         }
         if (sAttached != null) {
-            Log.w(TAG, "Seems CURRENT is null here, you may call Applications#context() before or " +
-                    "inside Application#attachBaseContext(Context), which is not recommended.");
+            if (BuildConfig.DEBUG) {
+                Log.w(TAG, "Seems CURRENT is null here, you may call Applications#context() before or " +
+                        "inside Application#attachBaseContext(Context), which is not recommended.");
+            }
             return sAttached;
         }
         throw new IllegalStateException("Please make sure you do not call Applications#context() " +

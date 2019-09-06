@@ -2,9 +2,10 @@ package utils.encryption.aes;
 
 import android.annotation.SuppressLint;
 import android.os.Build;
-import android.support.annotation.IntDef;
 import android.text.TextUtils;
 import android.util.Log;
+
+import androidx.annotation.IntDef;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;

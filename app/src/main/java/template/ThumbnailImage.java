@@ -7,8 +7,9 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
-import android.support.v4.app.Fragment;
 import android.widget.ImageView;
+
+import androidx.fragment.app.Fragment;
 
 import java.io.File;
 

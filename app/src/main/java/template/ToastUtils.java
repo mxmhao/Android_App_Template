@@ -3,11 +3,12 @@ package template;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.support.annotation.StringRes;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.StringRes;
 
 public class ToastUtils {
 

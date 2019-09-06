@@ -1,12 +1,13 @@
 package template.fragment_activity;
 
-import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-public class FragmentActivity extends Activity {
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+
+public class FragmentActivity extends AppCompatActivity {
 
     public static final String FRAGMENT_CLASS = "FragmentClass";
 
@@ -17,7 +18,7 @@ public class FragmentActivity extends Activity {
         try {
             Class fs = Class.forName(getIntent().getStringExtra(FRAGMENT_CLASS));
             //这里作为root view不加入到返回栈中，使back键可以关闭Activity
-            getFragmentManager()
+            getSupportFragmentManager()
                     .beginTransaction()
                     .add(android.R.id.content, (Fragment) fs.newInstance())
                     .commit();
