@@ -37,7 +37,7 @@ public class DownloadUtils {
 
     //下载apk
     private void downloadAPK() {
-        //创建下载任务
+        //创建下载请求
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(mUrl));
         //移动网络情况下是否允许漫游
         request.setAllowedOverRoaming(false);
@@ -56,8 +56,8 @@ public class DownloadUtils {
         //获取DownloadManager
         if (dm == null)
             dm = (DownloadManager) mContext.getSystemService(Context.DOWNLOAD_SERVICE);
-        //将下载请求加入下载队列，加入下载队列后会给该任务返回一个long型的id，通过该id可以取消任务，重启任务、获取下载的文件等等
         if (dm != null) {
+            //将请求加入队列，加入后会给该任务返回id，通过该id可以取消任务、重启任务、获取下载的文件等等
             downloadId = dm.enqueue(request);
         }
 
@@ -77,23 +77,22 @@ public class DownloadUtils {
     //检查下载状态
     private void checkStatus() {
         switch (getStatus()) {
-            //下载暂停
-            case DownloadManager.STATUS_PAUSED:
+            case DownloadManager.STATUS_PAUSED://下载暂停
                 break;
-            //下载延迟
-            case DownloadManager.STATUS_PENDING:
+
+            case DownloadManager.STATUS_PENDING://下载延迟
                 break;
-            //正在下载
-            case DownloadManager.STATUS_RUNNING:
+
+            case DownloadManager.STATUS_RUNNING://正在下载
                 break;
-            //下载完成
-            case DownloadManager.STATUS_SUCCESSFUL:
+
+            case DownloadManager.STATUS_SUCCESSFUL://下载完成
                 du = null;
                 mContext.unregisterReceiver(receiver);
                 installAPK();//下载完成安装APK
                 break;
-            //下载失败
-            case DownloadManager.STATUS_FAILED:
+
+            case DownloadManager.STATUS_FAILED://下载失败
                 du = null;
                 mContext.unregisterReceiver(receiver);
                 break;
@@ -114,13 +113,12 @@ public class DownloadUtils {
     }
 
     private void installAPK() {
-//        setPermission(file.getPath());
         Intent intent = new Intent(Intent.ACTION_VIEW);
         // 由于没有在Activity环境下启动Activity,设置下面的标签
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        //Android 7.0以上要使用FileProvider
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {//24以上
-            //参数1 上下文, 参数2 Provider主机地址 和配置文件中保持一致   参数3  共享的文件
+        //Android7.0(24)以上要使用FileProvider
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            //"test.mxm.FileProvider"在AndroidManifest.xml注册
             Uri apkUri = FileProvider.getUriForFile(mContext, "test.mxm.FileProvider", file);
             //添加这一句表示对目标应用临时授权该Uri所代表的文件
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
