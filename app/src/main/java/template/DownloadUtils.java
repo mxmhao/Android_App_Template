@@ -18,7 +18,7 @@ public class DownloadUtils {
     //下载器
     private DownloadManager dm;
     private Context mContext;
-    //下载的ID
+    //下载任务ID
     private long downloadId;
     private String mUrl;
     private File file;
@@ -102,7 +102,7 @@ public class DownloadUtils {
     public int getStatus() {
         int status = 0;
         DownloadManager.Query query = new DownloadManager.Query();
-        //通过下载的id查找
+        //通过id查找
         query.setFilterById(downloadId);
         Cursor cursor = dm.query(query);
         if (cursor.moveToFirst()) {
