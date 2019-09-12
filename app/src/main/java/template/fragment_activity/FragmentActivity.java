@@ -5,12 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
+import android.util.LongSparseArray;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import test.mxm.android_app_template.BuildConfig;
 
@@ -55,7 +53,7 @@ public class FragmentActivity extends AppCompatActivity {
         context.startActivity(new Intent(context, FragmentActivity.class).putExtra(FRAGMENT_CLASS, cls.getName()));
     }
 
-    private static final Map<Long, Fragment> fragmentMap = new HashMap<>(2);
+    private static final LongSparseArray<Fragment> fragmentMap = new LongSparseArray<>(2);
     public static void startFragment(Context context, Fragment fragment) {
         long key = SystemClock.elapsedRealtime();
         fragmentMap.put(key, fragment);
