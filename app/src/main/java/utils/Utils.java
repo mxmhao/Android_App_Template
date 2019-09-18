@@ -1,8 +1,13 @@
 package utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.webkit.MimeTypeMap;
 
 import java.net.Inet6Address;
@@ -90,5 +95,21 @@ public class Utils {
         intent.putExtra(Intent.EXTRA_SUBJECT, title);//添加标题
         intent.putExtra(Intent.EXTRA_TEXT, message);//添加分享内容
         activity.startActivity(intent);
+    }
+
+    /**
+     * WiFi判断
+     * @param context android.content.Context
+     */
+    public static boolean isWiFiConnected(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return cm.getNetworkCapabilities(cm.getActiveNetwork())
+                    .hasTransport(NetworkCapabilities.TRANSPORT_WIFI);//Wi-Fi
+//            NetworkCapabilities.TRANSPORT_CELLULAR//蜂窝网络，2/3/4/5G
+        }
+
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected() && networkInfo.getType() == ConnectivityManager.TYPE_WIFI;
     }
 }

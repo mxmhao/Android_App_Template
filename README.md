@@ -4,7 +4,7 @@
 ## [工具类，在“/app/src/main/java/utils/”目录下](/app/src/main/java/utils)
 1. [获取全局Context的工具类，无须传入Context；get_context_no_dependence_anything/](/app/src/main/java/utils/get_context_no_dependence_anything)
 2. [Utils工具，Utils.java](/app/src/main/java/utils/Utils.java)
-    包含：获取MIME类型、判断字符串是否为IP地址（模板）、分享到邮件
+    包含：获取MIME类型、判断字符串是否为IP地址（模板）、分享到邮件、WiFi连接判断
 3. [AES加解密](/app/src/main/java/utils/encryption/aes)
 
 ## [模板，在“/app/src/main/java/template/”目录下](/app/src/main/java/template)
