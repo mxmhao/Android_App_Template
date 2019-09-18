@@ -111,9 +111,10 @@ public class AES {
     };
     //字节数组转16进制字符串
     private static String byte2HexString(byte buf[]) {
-
-        StringBuilder sb = new StringBuilder();
+        char chs[] = new char[buf.length];
+//        StringBuilder sb = new StringBuilder(buf.length);//字符串很长的时候用此类
 //        String tp;
+        int index = 0;
         for (byte b : buf) {
             //一：
 //            sb.append(String.format("%02X", b & 0xFF));//性能最差，差的不止一个数量级的
@@ -125,10 +126,15 @@ public class AES {
 //            if (tp.length() < 2) sb.append('0');
 //            sb.append(tp);
             //四：性能最好
-            sb.append(hex[(b >>> 4) & 0x0F]);
-            sb.append(hex[b & 0x0F]);
+//            sb.append(hex[(b >>> 4) & 0x0F]);
+//            sb.append(hex[b & 0x0F]);
+            chs[index] = hex[(b >>> 4) & 0x0F];
+            ++index;
+            chs[index] = hex[b & 0x0F];
+            ++index;
         }
-        return sb.toString();
+//        return sb.toString();
+        return new String(chs);
     }
 
     //16进制转字节数组
