@@ -23,3 +23,4 @@
 13. [修改AlertDialog的主题；AlertDialogTheme.java](/app/src/main/java/template/AlertDialogTheme.java)、[R.style.AlertDialog](/app/src/main/res/values/styles.xml)
 14. [仿iOS的弹出框，但API和AlertDialog.Builder一致；AlertDialogTheme.java#Builder](/app/src/main/java/template/AlertDialogTheme.java)、[R.style.AlertDialogTheme](/app/src/main/res/values/styles.xml)
 15. [使用DownloadManager下载APK，并且安装；DownloadUtils.java](/app/src/main/java/template/DownloadUtils.java)、[FileProvider](/app/src/main/res/xml/share_dir.xml)
+16. [BottomSheetDialog去掉背景，方便自定义圆角等；BottomSheetDialogTheme.java](/app/src/main/java/template/BottomSheetDialogTheme.java)、[R.style.BottomSheetBgNullTheme](/app/src/main/res/values/styles.xml)

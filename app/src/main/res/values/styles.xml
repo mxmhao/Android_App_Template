@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <!-- 设置全局alertDialog的主题 -->
         <!--<item name="alertDialogTheme">@style/AlertDialog</item>-->
+        <!--<item name="bottomSheetDialogTheme">@style/BottomSheetBgNullTheme</item>-->
     </style>
     <!-- DarkActionBar主题的alertDialogTheme默认设置的是android:ThemeOverlay.Material.Dialog.Alert -->
 
@@ -46,5 +47,13 @@
     <style name="AlertDialogTheme" parent="android:ThemeOverlay.Material.Dialog.Alert">
         <!--内容区背景，白色带点透明，加上毛玻璃效果，就和iOS非常接近了-->
         <item name="android:windowBackground">@drawable/sh_2_btn_alert_bg</item>
+    </style>
+
+    <style name="BottomSheetModalBgNull" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@null</item><!--或者自定义背景-->
+    </style>
+    <style name="BottomSheetBgNullTheme" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+        <!--去掉BottomSheetDialog的背景，方便自定义视图添加圆角什么的-->
+        <item name="bottomSheetStyle">@style/BottomSheetModalBgNull</item>
     </style>
 </resources>
