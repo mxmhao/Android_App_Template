@@ -44,6 +44,7 @@
     </style>
 
     <style name="AlertDialogTheme" parent="android:ThemeOverlay.Material.Dialog.Alert">
-        <item name="android:windowBackground">@drawable/sh_2_btn_alert_bg</item><!--内容区背景-->
+        <!--内容区背景，白色带点透明，加上毛玻璃效果，就和iOS非常接近了-->
+        <item name="android:windowBackground">@drawable/sh_2_btn_alert_bg</item>
     </style>
 </resources>
