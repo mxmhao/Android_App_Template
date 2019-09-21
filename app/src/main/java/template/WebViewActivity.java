@@ -47,7 +47,7 @@ public class WebViewActivity extends Activity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                ProgressHUD.dismiss(WebViewActivity.this);
+                ProgressHUD.remove();
             }
 
             @Override//解决部分机型打开Url会提示使用外部浏览器
@@ -65,6 +65,7 @@ public class WebViewActivity extends Activity {
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 super.onReceivedError(view, request, error);
+                ProgressHUD.remove();
                 webView.loadUrl("about:blank");
                 showErrorAlert();
 
@@ -78,6 +79,7 @@ public class WebViewActivity extends Activity {
             @Override
             public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
                 super.onReceivedHttpError(view, request, errorResponse);
+                ProgressHUD.remove();
                 int statusCode = errorResponse.getStatusCode();
                 if (404 == statusCode || 500 == statusCode) {
                     view.loadUrl("about:blank");
@@ -90,6 +92,7 @@ public class WebViewActivity extends Activity {
             @Override
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
+                ProgressHUD.remove();
                 // android 6.0 以下通过title获取
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                     if (title.contains("404") || title.contains("500") || title.contains("Error")) {

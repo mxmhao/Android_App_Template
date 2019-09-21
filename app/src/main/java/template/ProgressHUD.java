@@ -40,9 +40,9 @@ public class ProgressHUD {
     }
 
     /**
-     * 进度条显示在整个window上面，下层view无法点击，使用{@link ProgressHUD#dismiss}移除
+     * 进度条显示在整个window上面，下层view无法点击，使用{@link ProgressHUD#dismiss()}移除
      * @param activity
-     * @see ProgressHUD#dismiss
+     * @see ProgressHUD#dismiss()
      */
     public static void showOnWindow(Activity activity) {
         ProgressBar bar = initProgressBar(activity);
@@ -65,9 +65,9 @@ public class ProgressHUD {
     private static WeakReference<ProgressBar> wrpb;
     /**
      * 指示器显示在Activity的DecorView的上面，可以随着Activity的消失而消失，
-     * 请在Activity销毁前调用{@link ProgressHUD#dismiss(Activity)}，否则可能造成内存泄漏
+     * 请在Activity销毁前调用{@link ProgressHUD#remove()}，否则可能造成内存泄漏
      * @param activity
-     * @see ProgressHUD#dismiss(Activity)
+     * @see ProgressHUD#remove()
      */
     public static void showOnContent(Activity activity) {
         ProgressBar pb = initProgressBar(activity);
@@ -78,9 +78,8 @@ public class ProgressHUD {
 
     /**
      * @see ProgressHUD#showOnContent(Activity)
-     * @param activity
      */
-    public static void dismiss(Activity activity) {
+    public static void remove() {
         if (null == wrpb || wrpb.get() == null) return;
 //        ((ViewGroup) activity.getWindow().getDecorView()
 //                .findViewById(android.R.id.content)).removeView(wrpb.get());
