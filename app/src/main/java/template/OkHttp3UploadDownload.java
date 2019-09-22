@@ -233,6 +233,7 @@ public class OkHttp3UploadDownload {
                     timer.schedule(task, 1000, 1000);
 
                     //文件保存 方式二：
+                    //多并发用RandomAccessFile
                     File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "test.jpg");//文件存放位置
                     file.createNewFile();
                     sink = Okio.buffer(Okio.sink(file));//断点续传Okio.appendingSink(file)
@@ -292,7 +293,6 @@ class ProgressTask extends TimerTask {
 
 /**
  * 此类使用来包装Response.body().source()，需要配合“文件保存方式二”使用；
- * 若是要分段并发下载单个文件，请包装Response.body().byteStream()
  */
 class ProgressSource implements Source, Progress {
 
