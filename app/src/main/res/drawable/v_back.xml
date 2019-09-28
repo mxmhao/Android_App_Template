@@ -1,0 +1,11 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:height="28dp"
+    android:width="20dp"
+    android:viewportHeight="14.0"
+    android:viewportWidth="10.0"
+    android:tint="#000000">
+    <path android:fillColor="#FF000000"
+        android:pathData="M8.41,2.41 L7,1 l-6,6 6,6 1.41,-1.41 L3.83,7z"/>
+</vector>
+<!-- height:width=viewportHeight:viewportWidth
+    等比放大或缩小height、width就可放大或缩小当前矢量图 -->
