@@ -25,3 +25,4 @@
 15. [使用DownloadManager下载APK，并且安装；DownloadUtils.java](/app/src/main/java/template/DownloadUtils.java)、[FileProvider](/app/src/main/res/xml/share_dir.xml)
 16. [BottomSheetDialog去掉背景，方便自定义圆角等；BottomSheetDialogTheme.java](/app/src/main/java/template/BottomSheetDialogTheme.java)、[R.style.BottomSheetBgNullTheme](/app/src/main/res/values/styles.xml)
 17. [仿iOS导航箭头图标，用的矢量图(vector)，去掉了系统创建vector的多余的空白；](/app/src/main/res/drawable)[R.drawable.v_back](/app/src/main/res/drawable/v_back.xml)、[R.drawable.v_next](/app/src/main/res/drawable/v_next.xml)
+18. [单击时间间隔控制，使用的是聚合模式，而不是abstract类；SingleClickController.java](/app/src/main/java/template/SingleClickController.java)
