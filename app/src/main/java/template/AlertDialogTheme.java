@@ -194,14 +194,14 @@ class Builder {
 
         if (!TextUtils.isEmpty(leftBtnText)) {
             btnLeft.setText(leftBtnText);
-            btnLeft.setOnClickListener(new OnClick(dialog, leftBtnClick, DialogInterface.BUTTON_NEGATIVE));
+            btnLeft.setOnClickListener(new DialogOnClick(dialog, leftBtnClick, DialogInterface.BUTTON_NEGATIVE));
         } else {
             btnLeft.setVisibility(View.GONE);
         }
 
         if (!TextUtils.isEmpty(rightBtnText)) {
             btnRight.setText(rightBtnText);
-            btnRight.setOnClickListener(new OnClick(dialog, rightBtnClick, DialogInterface.BUTTON_POSITIVE));
+            btnRight.setOnClickListener(new DialogOnClick(dialog, rightBtnClick, DialogInterface.BUTTON_POSITIVE));
         } else {
             btnRight.setVisibility(View.GONE);
         }
@@ -216,12 +216,12 @@ class Builder {
     }
 }
 
-class OnClick implements View.OnClickListener {
+class DialogOnClick implements View.OnClickListener {
     private DialogInterface mDialog;
     private DialogInterface.OnClickListener mOnClickListener;
     private int mWhichButton;
 
-    public OnClick(DialogInterface dialog, DialogInterface.OnClickListener onClickListener, int whichButton) {
+    public DialogOnClick(DialogInterface dialog, DialogInterface.OnClickListener onClickListener, int whichButton) {
         mDialog = dialog;
         mOnClickListener = onClickListener;
         mWhichButton = whichButton;
