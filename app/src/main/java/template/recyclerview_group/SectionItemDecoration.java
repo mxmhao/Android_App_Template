@@ -54,11 +54,12 @@ public class SectionItemDecoration extends RecyclerView.ItemDecoration {
         RecyclerView.LayoutParams params;
         int position;
         int bottom;
-
+//        parent.getChildViewHolder()
         for (int i = titleDocksAtTheTop? 1 : 0; i < childCount; i++) {//有悬浮标题时，第0个item不用绘制
             child = parent.getChildAt(i);
             params = (RecyclerView.LayoutParams) child.getLayoutParams();
             position = params.getViewLayoutPosition();
+//            position = params.getViewAdapterPosition();
             bottom = child.getTop() - params.topMargin;
 
             if (0 == position || (position = titleIndexAt(position)) > 0) {
@@ -80,9 +81,18 @@ public class SectionItemDecoration extends RecyclerView.ItemDecoration {
         //绘制文字
         mPaint.setColor(COLOR_TITLE_FONT);
         mPaint.getTextBounds(title, 0, title.length(), mBounds);
+
         c.drawText(title, bgLeft,
-                bgBottom - (mTitleBgHeight/2 - mBounds.height()/2),//y是baseline的位置，这里用文字的底部粗略当baseline
+                bgBottom - (mTitleBgHeight/2 - mBounds.bottom/2),//y是baseline的位置，这里用文字的底部粗略当baseline
                 mPaint);
+//        Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();
+//        float distance = (fontMetrics.bottom - fontMetrics.top)/2 - fontMetrics.bottom;
+//        float baseline = (bgTop + bgBottom)/2 + distance;//基准线
+        /*
+        * 对于大部分中文英文，distance用top和bottom计算，有偏差，字体被偏下了一点点，
+        * 应该用ascent和descent计算,
+        * 部分国家的特殊字符的上下高度会超过descent，ascent，用top和bottom计算
+        */
     }
 
     @Override

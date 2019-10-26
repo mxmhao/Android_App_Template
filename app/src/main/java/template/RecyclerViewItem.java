@@ -68,13 +68,10 @@ public class RecyclerViewItem extends RecyclerView.Adapter<MyViewHolder> impleme
         menu.add(ContextMenu.NONE, ContextMenu.FIRST + 1, ContextMenu.NONE, "收藏");
     }
 
-    private long lastClick;//防止重复点击，应该有更优雅的方式
     //View.OnClickListener
-    @Override//item点击实践
+    @Override//item点击事件
     public void onClick(View v) {
-        if (SystemClock.elapsedRealtime() - lastClick < 800) return;//0.8秒内防止重复点击
         itemInterface.onItemClick(item2Holder.get(v).getAdapterPosition());//划重点
-        lastClick = SystemClock.elapsedRealtime();
     }
 
     public static interface ItemInterface {
