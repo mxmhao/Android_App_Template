@@ -3,12 +3,14 @@ package template;
 import android.os.Environment;
 import android.webkit.MimeTypeMap;
 
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
+import java.nio.ByteBuffer;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -333,7 +335,7 @@ class ProgressSource implements Source, Progress {
     }
 }
 
-class ProgressSink implements Sink, Progress {
+class ProgressSink implements Progress/*, Sink*/{
 
     private BufferedSink sink;
     private long loadedBytes = 0;//已上传的字节数
@@ -342,12 +344,6 @@ class ProgressSink implements Sink, Progress {
     ProgressSink(BufferedSink sink, long totalBytes) {
         this.sink = sink;
         this.totalBytes = totalBytes;
-    }
-
-    @Override
-    public void write(Buffer source, long byteCount) throws IOException {
-        sink.write(source, byteCount);
-        loadedBytes += byteCount;
     }
 
     //此方法就是对RealBufferedSink.writeAll方法改造
@@ -365,6 +361,27 @@ class ProgressSink implements Sink, Progress {
         return totalBytesRead;
     }
 
+    public void write(Source source, long byteCount) throws IOException {
+        Buffer buffer = sink.buffer();
+        while (byteCount > 0) {
+            long read = source.read(buffer, byteCount);
+            if (read == -1) throw new EOFException();
+            byteCount -= read;
+            sink.emitCompleteSegments();
+            loadedBytes += read;
+        }
+    }
+
+    public void write(ByteBuffer source) throws IOException {
+        loadedBytes += sink.write(source);
+    }
+
+    /*@Override
+    public void write(Buffer source, long byteCount) throws IOException {
+        sink.write(source, byteCount);
+        loadedBytes += byteCount;
+    }
+
     @Override
     public void flush() throws IOException {
         sink.flush();
@@ -378,7 +395,7 @@ class ProgressSink implements Sink, Progress {
     @Override
     public void close() throws IOException {
         sink.close();
-    }
+    }*/
 
     @Override
     public long getLoadedBytes() {
