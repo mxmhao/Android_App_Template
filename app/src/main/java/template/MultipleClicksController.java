@@ -13,6 +13,8 @@ public class MultipleClicksController implements View.OnClickListener {
     private final long[] hits;
 
     public View.OnClickListener vocListener;
+
+    //clicks表示多击次数
     public MultipleClicksController(int clicks, View.OnClickListener vocListener) {
         this.vocListener = vocListener;
         hits = new long[clicks];
