@@ -12,7 +12,8 @@ import androidx.fragment.app.Fragment;
 
 import test.mxm.android_app_template.BuildConfig;
 
-public class FragmentActivity extends AppCompatActivity {
+//使用final后，编译器会有方法内联优化
+public final class FragmentActivity extends AppCompatActivity {
 
     private static final String FRAGMENT_CLASS = "FragmentClass";
     private static final String FRAGMENT_OBJECT = "FragmentObject";
@@ -46,8 +47,8 @@ public class FragmentActivity extends AppCompatActivity {
 
     /**
      * 直接启动activity
-     * @param context
-     * @param cls
+     * @param context Context
+     * @param cls Class extends Fragment
      */
     public static void startFragment(Context context, Class<? extends Fragment> cls) {
         context.startActivity(new Intent(context, FragmentActivity.class).putExtra(FRAGMENT_CLASS, cls.getName()));
@@ -62,9 +63,9 @@ public class FragmentActivity extends AppCompatActivity {
 
     /**
      * 获取启动的Intent，用户设置一些传递参数，然后用户自己启动
-     * @param context
-     * @param cls
-     * @return
+     * @param context Context
+     * @param cls Class extends Fragment
+     * @return Intent
      */
     public static Intent getStartIntent(Context context, Class<? extends Fragment> cls) {
         return new Intent(context, FragmentActivity.class).putExtra(FRAGMENT_CLASS, cls.getName());
