@@ -24,6 +24,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import test.mxm.android_app_template.BuildConfig;
 
+//https://zhuanlan.zhihu.com/p/24255780
 public class AES {
     private static final String TAG = "AES";
 
@@ -50,7 +51,7 @@ public class AES {
             } else {
                 secretKeySpec = fixSmallVersion(secretKey);
             }
-            Cipher cipher = Cipher.getInstance("AES");
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             cipher.init(type, secretKeySpec);
             if (type == Cipher.ENCRYPT_MODE) {//加密
                 byte[] byteContent = content.getBytes("utf-8");
