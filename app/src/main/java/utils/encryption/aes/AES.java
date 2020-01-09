@@ -51,7 +51,7 @@ public class AES {
             } else {
                 secretKeySpec = fixSmallVersion(secretKey);
             }
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            Cipher cipher = Cipher.getInstance("AES");//AES/CBC/PKCS5Padding会报错？
             cipher.init(type, secretKeySpec);
             if (type == Cipher.ENCRYPT_MODE) {//加密
                 byte[] byteContent = content.getBytes("utf-8");
