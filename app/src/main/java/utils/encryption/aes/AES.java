@@ -143,8 +143,30 @@ public class AES {
         final int len = hexStr.length();
         if (len < 1) return null;
         byte[] result = new byte[len / 2];
-        for (int i = 0, index = i * 2; i < len/2; i++, index = i * 2) {
-            result[i] = (byte) Integer.parseInt(hexStr.substring(index, index + 2), 16);
+        // i/2 == i>>1
+//        for (int i = 0; i < len; i+=2) {
+//            result[i>>1] = (byte) Integer.parseInt(hexStr.substring(i, i + 2), 16);//出错抛异常
+//        }
+//        for (int i = 0; i < len; i+=2) {
+//            result[i>>1] = (byte) ((Character.digit((int)hexStr.charAt(i), 16) << 4)
+//                    | Character.digit((int)hexStr.charAt(i + 1), 16));//出错无抛异常
+//        }
+        for (int i = 0; i < len; i+=2) {
+            result[i>>1] = (byte) ((digit(hexStr.charAt(i)) << 4) | digit(hexStr.charAt(i + 1)));//出错抛异常
+        }
+        return result;
+    }
+
+    private static int digit(char codePoint) {
+        int result = -1;
+        if ('0' <= codePoint && codePoint <= '9') {
+            result = codePoint - '0';
+        } else if ('a' <= codePoint && codePoint <= 'f') {
+            result = 10 + (codePoint - 'a');
+        } else if ('A' <= codePoint && codePoint <= 'F') {
+            result = 10 + (codePoint - 'A');
+        } else {
+            throw new NumberFormatException("For input char: \"" + codePoint + "\"");
         }
         return result;
     }
