@@ -1,5 +1,6 @@
 # Android_App_Template
-安卓App工具类和模板代码，工具类一般可以直接使用，模板类主要用来参考，引入到自己的项目时可能会报错，请自行修改。
+安卓App工具类和模板代码，工具类一般可以直接使用，模板类主要用来参考，引入到自己的项目时可能会报错，请自行修改。  
+开发安卓前，请去了解 Jetpack 和 Hilt 能使你的开发方便很多。
 
 ## [工具类，在“/app/src/main/java/utils/”目录下](/app/src/main/java/utils)
 1. [获取全局Context的工具类，无须传入Context；get_context_no_dependence_anything/](/app/src/main/java/utils/get_context_no_dependence_anything)
