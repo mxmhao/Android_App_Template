@@ -28,3 +28,4 @@
 17. [仿iOS导航箭头图标，用的矢量图(vector)，去掉了系统创建vector的多余的空白；](/app/src/main/res/drawable)[R.drawable.v_back](/app/src/main/res/drawable/v_back.xml)、[R.drawable.v_next](/app/src/main/res/drawable/v_next.xml)
 18. [单击时间间隔控制，使用的是聚合模式，而不是abstract类；SingleClickController.java](/app/src/main/java/template/SingleClickController.java)
 19. [多击（谷歌工程师写的），使用的是聚合模式；MultipleClicksController.java](/app/src/main/java/template/MultipleClicksController.java)
+20. [系统日历事件提醒增删和系统闹钟增删；CalendarAndAlarmClock.java](/app/src/main/java/template/CalendarAndAlarmClock.java)
