@@ -60,7 +60,7 @@ public class CalendarAndAlarmClock {
             //如果小于1代表没有账户
             if (userCursor.getCount() < 1) {
                 //添加账户
-                calenderId = initCalendars(activity, "antinker");
+                calenderId = initCalendars(activity, "mintest");
             } else {
                 //注意：是向最后一个账户添加，开发者可以根据需要改变添加事件 的账户
                 userCursor.moveToLast();
