@@ -25,6 +25,9 @@ import java.util.HashMap;
 
 import test.mxm.android_app_template.BuildConfig;
 
+/**
+ * https://github.com/apache/cordova-android/blob/master/framework/src/org/apache/cordova/engine/SystemWebChromeClient.java
+ */
 public class WebViewActivity extends Activity {
     private final String TAG = "WebActivity";
 
@@ -227,16 +230,27 @@ public class WebViewActivity extends Activity {
     }
 
 
+    //https://github.com/apache/cordova-android/blob/master/framework/src/org/apache/cordova/engine/SystemWebChromeClient.java
     //打开文件选择器
     private static final int FILE_CHOOSER_RESULT_CODE = 6432;
     private ValueCallback<Uri[]> mValueCallback;
     private void openFileChooserActivity(ValueCallback<Uri[]> filePathCallback,
                                          WebChromeClient.FileChooserParams fileChooserParams) {
         mValueCallback = filePathCallback;
-        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-        i.addCategory(Intent.CATEGORY_OPENABLE);
-        i.setType("*/*");
-        startActivityForResult(Intent.createChooser(i,
+        Boolean selectMultiple = false;
+        if (fileChooserParams.getMode() == WebChromeClient.FileChooserParams.MODE_OPEN_MULTIPLE) {
+            selectMultiple = true;
+        }
+        Intent intent = fileChooserParams.createIntent();
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, selectMultiple);
+
+        // Uses Intent.EXTRA_MIME_TYPES to pass multiple mime types.
+        String[] acceptTypes = fileChooserParams.getAcceptTypes();
+        if (acceptTypes.length > 1) {
+            intent.setType("*/*"); // Accept all, filter mime types by Intent.EXTRA_MIME_TYPES.
+            intent.putExtra(Intent.EXTRA_MIME_TYPES, acceptTypes);
+        }
+        startActivityForResult(Intent.createChooser(intent,
                 ""), FILE_CHOOSER_RESULT_CODE);
     }
 
