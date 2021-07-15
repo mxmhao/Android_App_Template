@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/colorPrimary"/>
+    <!-- 水平居中靠底部，距离底部100dp，drawable也可以放图片 -->
+    <item android:gravity="center_horizontal|bottom"
+        android:bottom="100dp"
+        android:drawable="@drawable/btn_round_rectangle">
+    </item>
+</layer-list>

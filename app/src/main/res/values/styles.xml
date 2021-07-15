@@ -56,4 +56,38 @@
         <!--去掉BottomSheetDialog的背景，方便自定义视图添加圆角什么的-->
         <item name="bottomSheetStyle">@style/BottomSheetModalBgNull</item>
     </style>
+
+    <style name="TranslucentBarTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowTranslucentStatus">true</item>
+        <!--<item name="android:windowTranslucentNavigation">true</item>-->
+        <!--Android 5.x开始需要把颜色设置透明，否则导航栏会呈现系统默认的浅灰色-->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <!--<item name="android:statusBarColor">@android:color/white</item>-->
+        <!-- 底部导航栏的背景色（三个 ◀ ■ ≡ 按钮，或新版的底部导航栏） -->
+        <!--<item name="android:navigationBarColor">@android:color/transparent</item>-->
+        <!-- Android 6.0以上 状态栏字色和图标为浅黑色-->
+        <item name="android:windowLightStatusBar">true</item>
+
+        <!-- 整个主题的背景色 -->
+        <!--<item name="android:colorBackground">@android:color/white</item>-->
+        <!--<item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
+        <!-- 这个最好放在单个布局文件中去，有时候会影响Toast的布局 -->
+        <!--<item name="android:fitsSystemWindows">true</item>-->
+
+        <!-- 下面两个属性设置成相同的颜色，貌似也可以实现app顶部栏和状态栏颜色一体化 -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
+    </style>
+
+    <style name="LauncherTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- 整个主题的背景色 -->
+        <!--<item name="android:colorBackground">@android:color/white</item>-->
+        <!--<item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
+        <!-- 设置启动页，这个属性只能是drawable，不能是layout -->
+        <item name="android:windowSplashscreenContent">@drawable/launcher_splash</item>
+        <!-- 禁用启动窗口，启动页 -->
+        <!--<item name="android:windowDisablePreview">true</item>-->
+        <!-- 这个属性在8.0之前可以当成简单的启动页 -->
+        <!--<item name="android:windowBackground">@drawable/launcher_splash</item>-->
+    </style>
 </resources>
