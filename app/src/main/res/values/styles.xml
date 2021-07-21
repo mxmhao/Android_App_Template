@@ -79,6 +79,7 @@
         <item name="colorPrimaryDark">@color/colorPrimary</item>
     </style>
 
+    <!-- #1111 -->
     <style name="LauncherTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- 整个主题的背景色 -->
         <!--<item name="android:colorBackground">@android:color/white</item>-->
