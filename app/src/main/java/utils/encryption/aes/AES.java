@@ -24,6 +24,11 @@ import javax.crypto.spec.SecretKeySpec;
 
 import test.mxm.android_app_template.BuildConfig;
 
+/*
+* 安卓系统提供了多种密钥算法：
+* https://developer.android.google.cn/guide/topics/security/cryptography
+* https://developer.android.google.cn/training/articles/keystore
+*/
 //https://zhuanlan.zhihu.com/p/24255780
 public class AES {
     private static final String TAG = "AES";
