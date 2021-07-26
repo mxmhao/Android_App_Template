@@ -68,6 +68,8 @@
         <!-- Android 6.0以上 状态栏字色和图标为浅黑色-->
         <item name="android:windowLightStatusBar">true</item>
 
+        <!-- 某些手机设置上面3个后，status bar 还是会有半透明黑色 bar，那么把 android:windowTranslucentStatus 设置去掉，然后在activity中调用 getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR) 方法即可兼容 -->
+
         <!-- 整个主题的背景色 -->
         <!--<item name="android:colorBackground">@android:color/white</item>-->
         <!--<item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
