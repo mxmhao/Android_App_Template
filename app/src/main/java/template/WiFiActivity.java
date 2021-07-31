@@ -8,7 +8,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkRequest;
 import android.net.wifi.ScanResult;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Handler;
@@ -16,7 +21,9 @@ import android.os.Looper;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
+import android.util.Log;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
@@ -169,5 +176,65 @@ class WiFiUtils extends BroadcastReceiver {
 
     public interface ScanResults {
         void didWiFiScanResult(List<String> results);
+    }
+
+    public interface WifiNameGet {
+        void didGetWifiName(String results);
+    }
+
+    /**
+     * 9.0起需要ACCESS_FINE_LOCATION权限，调用前请检查权限
+     */
+    public static void getWiFiName(Context context, final WifiNameGet wifiNameGet) {
+        WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        if (!wifiManager.isWifiEnabled()) {
+            wifiNameGet.didGetWifiName(null);
+            return;
+        }
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
+            WifiInfo wifiInfo = wifiManager.getConnectionInfo();//就算WiFi没有开启，这个也有返回值，只是 id < 0
+            Log.e("TAG", "wifiInfo：" + wifiInfo.toString()); //打印全部wifi信息
+            Log.e("TAG", "SSID：" + wifiInfo.getSSID());      //打印SSID
+            Log.e("TAG", "ID：" + wifiInfo.getNetworkId());      //打印SSID
+            if (wifiInfo.getNetworkId() < 0) {
+                wifiNameGet.didGetWifiName(null);
+                return;
+            }
+            String ssid = wifiInfo.getSSID();
+            if (ssid.startsWith("\"") && ssid.endsWith("\"")) {
+                ssid = ssid.substring(1, ssid.length() - 1);//去掉首尾的双引号
+            }
+            Log.e("TAG", "SSID：" + ssid);      //打印SSID
+            wifiNameGet.didGetWifiName(ssid);
+            return;
+        }
+        final NetworkRequest request = new NetworkRequest.Builder().addTransportType(NetworkCapabilities.TRANSPORT_WIFI).build();
+        final ConnectivityManager connectivityManager = context.getSystemService(ConnectivityManager.class);
+        final ConnectivityManager.NetworkCallback networkCallback = new ConnectivityManager.NetworkCallback() {
+
+            @RequiresApi(api = Build.VERSION_CODES.Q)
+            @Override
+            public void onCapabilitiesChanged(Network network, NetworkCapabilities networkCapabilities) {
+                WifiInfo wifiInfo = (WifiInfo) networkCapabilities.getTransportInfo();
+//                Log.e("TAG", "onCapabilitiesChanged0: " + networkCapabilities.getTransportInfo());
+                if (null != wifiInfo && wifiInfo.getNetworkId() > -1) {
+                    wifiNameGet.didGetWifiName(wifiInfo.getSSID());
+                    Log.e("TAG", "onCapabilitiesChanged1: " + wifiInfo.getSSID());
+                } else {
+                    wifiNameGet.didGetWifiName(null);
+                    Log.e("TAG", "onCapabilitiesChanged2: " + networkCapabilities.getTransportInfo());
+                }
+            }
+
+            @Override
+            public void onUnavailable() {
+                wifiNameGet.didGetWifiName(null);
+                Log.e("TAG", "onUnavailable: ");
+            }
+        };
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            connectivityManager.requestNetwork(request, networkCallback, 800); // For request
+//        connectivityManager.registerNetworkCallback(request, networkCallback); // For listen
+        }
     }
 }
