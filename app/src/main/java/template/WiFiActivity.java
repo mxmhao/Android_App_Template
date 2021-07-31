@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
@@ -16,11 +17,11 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
@@ -146,13 +147,15 @@ class WiFiUtils extends BroadcastReceiver {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             context.registerReceiver(WiFiUtils.this, filter);
-                            Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
+                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             context.startActivity(intent);
                         }
                     })
                     .setNegativeButton("取消", null)
                     .show();
+
+//            BottomSheetDialog bsd = new BottomSheetDialog(context);//用这个弹框会不会好点？
         } else {
             context.registerReceiver(this, filter);
             mNeedScan = true;
@@ -184,8 +187,12 @@ class WiFiUtils extends BroadcastReceiver {
 
     /**
      * 9.0起需要ACCESS_FINE_LOCATION权限，调用前请检查权限
+     * 10 起开始需要开启定位服务，提示用户去打开
      */
     public static void getWiFiName(Context context, final WifiNameGet wifiNameGet) {
+//        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        context.startActivity(intent);
         WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         if (!wifiManager.isWifiEnabled()) {
             wifiNameGet.didGetWifiName(null);
@@ -215,7 +222,7 @@ class WiFiUtils extends BroadcastReceiver {
             @RequiresApi(api = Build.VERSION_CODES.Q)
             @Override
             public void onCapabilitiesChanged(Network network, NetworkCapabilities networkCapabilities) {
-                WifiInfo wifiInfo = (WifiInfo) networkCapabilities.getTransportInfo();
+                WifiInfo wifiInfo = (WifiInfo) networkCapabilities.getTransportInfo();//这个貌似要到API31才会有返回值
 //                Log.e("TAG", "onCapabilitiesChanged0: " + networkCapabilities.getTransportInfo());
                 if (null != wifiInfo && wifiInfo.getNetworkId() > -1) {
                     wifiNameGet.didGetWifiName(wifiInfo.getSSID());
@@ -236,5 +243,12 @@ class WiFiUtils extends BroadcastReceiver {
             connectivityManager.requestNetwork(request, networkCallback, 800); // For request
 //        connectivityManager.registerNetworkCallback(request, networkCallback); // For listen
         }
+    }
+
+    //判断定位服务是否开启
+    public static boolean isGpsEnabled(Context ctx) {
+        //从系统服务中获取定位管理器
+        LocationManager lm = (LocationManager) ctx.getSystemService(Context.LOCATION_SERVICE);
+        return lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 }
