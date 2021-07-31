@@ -25,9 +25,6 @@ import java.util.HashMap;
 
 import test.mxm.android_app_template.BuildConfig;
 
-/**
- * https://github.com/apache/cordova-android/blob/master/framework/src/org/apache/cordova/engine/SystemWebChromeClient.java
- */
 public class WebViewActivity extends Activity {
     private final String TAG = "WebActivity";
 
@@ -105,7 +102,12 @@ public class WebViewActivity extends Activity {
                 }
             }
 
-            //<input type="file"/>标签适配
+            /**
+             * <input type="file"/>标签适配
+             * https://developers.google.com/web/fundamentals/media/capturing-images
+             * https://developers.google.cn/web/fundamentals/media/capturing-images
+             * https://github.com/apache/cordova-android/blob/master/framework/src/org/apache/cordova/engine/SystemWebChromeClient.java
+             */
             @Override
             public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
                 openFileChooserActivity(filePathCallback, fileChooserParams);
