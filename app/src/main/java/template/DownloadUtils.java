@@ -43,6 +43,8 @@ public class DownloadUtils {
         request.setAllowedOverRoaming(false);
         //在通知栏中显示，默认就是显示的
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
+        //隐藏通知栏 manifest必须配置权限：android.permission.DOWNLOAD_WITHOUT_NOTIFICATION;
+//        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
         request.setTitle("正在下载最新APK");
         request.setDescription("my.apk");
         request.setVisibleInDownloadsUi(true);
@@ -51,8 +53,8 @@ public class DownloadUtils {
         file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
                 "my.apk");
         if (file.exists()) file.delete();
-
-        request.setDestinationUri(Uri.fromFile(file));
+        //设置文件存放路径，路径必须是Context.getExternalFilesDir()目录下的，或Environment.getExternalStoragePublicDirectory()目录下的，否则不支持；还可能需要有Manifest.permission.WRITE_EXTERNAL_STORAGE，具体请看注释。
+        request.setDestinationUri(Uri.fromFile(file));//Context.getExternalFilesDir(null)，API29以上此目录下不需要读写权限
         //获取DownloadManager
         if (dm == null)
             dm = (DownloadManager) mContext.getSystemService(Context.DOWNLOAD_SERVICE);
