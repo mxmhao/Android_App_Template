@@ -21,7 +21,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
@@ -30,6 +29,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 从android 10之前，蓝牙和WiFi的所有功能只要有精确定位权限既可；10起既要精确定位权限，也要开启定位服务。
+ * WiFi扫描的限制：
+ * https://developer.android.google.cn/guide/topics/connectivity/wifi-scan#wifi-scan-restrictions
+ * 蓝牙扫描的限制：
+ * https://developer.android.google.cn/guide/topics/connectivity/bluetooth-le
+ */
 public class WiFiActivity extends AppCompatActivity {
 
     @Override
@@ -51,7 +57,7 @@ public class WiFiActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             new WiFiUtils().startScan(this, new WiFiUtils.ScanResults() {
