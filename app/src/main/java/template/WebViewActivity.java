@@ -103,7 +103,7 @@ public class WebViewActivity extends Activity {
             }
 
             /**
-             * <input type="file"/>标签适配
+             * <input type="file"/>标签适配，<input type="file" accept="image/*"  multiple> multiple布尔值，表示多选，capture属性可查
              * https://developers.google.com/web/fundamentals/media/capturing-images
              * https://developers.google.cn/web/fundamentals/media/capturing-images
              * https://github.com/apache/cordova-android/blob/master/framework/src/org/apache/cordova/engine/SystemWebChromeClient.java
