@@ -85,7 +85,7 @@
         <!-- 整个主题的背景色 -->
         <!--<item name="android:colorBackground">@android:color/white</item>-->
         <!--<item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
-        <!-- 设置启动页，这个属性只能是drawable，不能是layout -->
+        <!-- 设置启动页，这个属性只能是drawable，不能是layout，貌似API 30 以上可用layout -->
         <item name="android:windowSplashscreenContent">@drawable/launcher_splash</item>
         <!-- 禁用启动窗口，启动页 -->
         <!--<item name="android:windowDisablePreview">true</item>-->

@@ -29,6 +29,6 @@
 18. [单击时间间隔控制，使用的是聚合模式，而不是abstract类；SingleClickController.java](/app/src/main/java/template/SingleClickController.java)
 19. [多击（谷歌工程师写的），使用的是聚合模式；MultipleClicksController.java](/app/src/main/java/template/MultipleClicksController.java)
 20. [系统日历事件提醒增删和系统闹钟增删；CalendarAndAlarmClock.java](/app/src/main/java/template/CalendarAndAlarmClock.java)
-21. [透明状态栏，App顶部栏与状态栏(StatusBar)颜色一体化，沉浸(jin)式状态栏；R.style.TranslucentBarTheme](/app/src/main/res/values/styles.xml)
+21. [透明状态栏，App顶部栏与状态栏(StatusBar)颜色一体化，沉浸(jin)式状态栏；R.style.TranslucentBarTheme](/app/src/main/res/values/styles.xml)、[API>=30透明状态栏，及延长启动页（可当广告页）时间；TranslucentBarActivity.java](/app/src/main/java/template/TranslucentBarActivity.java)
 22. [最简、最省存储的启动页设置；R.style.LauncherTheme](/app/src/main/res/values/styles.xml)
 23. [获取WiFi列表，获取当前链接的WiFi名称；WiFiActivity.java](/app/src/main/java/template/WiFiActivity.java)
