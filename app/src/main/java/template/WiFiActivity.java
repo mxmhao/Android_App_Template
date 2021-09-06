@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -16,10 +15,13 @@ import android.net.NetworkRequest;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.net.wifi.WifiNetworkSpecifier;
+import android.net.wifi.WifiNetworkSuggestion;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.PatternMatcher;
 import android.provider.Settings;
 import android.util.Log;
 
@@ -27,7 +29,10 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * 从android 10之前，蓝牙和WiFi的所有功能只要有精确定位权限既可；10起既要精确定位权限，也要开启定位服务。
@@ -35,6 +40,10 @@ import java.util.List;
  * https://developer.android.google.cn/guide/topics/connectivity/wifi-scan#wifi-scan-restrictions
  * 蓝牙扫描的限制：
  * https://developer.android.google.cn/guide/topics/connectivity/bluetooth-le
+ *
+ * 建议：
+ *  如果是扫描外设，使用CompanionDeviceManager类会节约很多的步骤，比如：权限请求等
+ *  https://developer.android.com/guide/topics/connectivity/companion-device-pairing
  */
 public class WiFiActivity extends AppCompatActivity {
 
@@ -43,11 +52,8 @@ public class WiFiActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         final int state = checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
         if (state == PackageManager.PERMISSION_GRANTED) {
-            new WiFiUtils().startScan(this, new WiFiUtils.ScanResults() {
-                @Override
-                public void didWiFiScanResult(List<String> results) {
+            new WiFiUtils().startScan(this, results -> {
 
-                }
             });
         } else if (state == PackageManager.PERMISSION_DENIED) {
             //调到权限设置界面
@@ -60,11 +66,8 @@ public class WiFiActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            new WiFiUtils().startScan(this, new WiFiUtils.ScanResults() {
-                @Override
-                public void didWiFiScanResult(List<String> results) {
+            new WiFiUtils().startScan(this, results -> {
 
-                }
             });
         }
     }
@@ -103,7 +106,6 @@ class WiFiUtils extends BroadcastReceiver {
                 mScanResults.didWiFiScanResult(list);
                 break;
         }
-
     }
 
     private Handler handler;
@@ -134,12 +136,9 @@ class WiFiUtils extends BroadcastReceiver {
 
         if (mWiFiManager.isWifiEnabled()) {
             context.registerReceiver(this, filter);
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    if (mWiFiManager.isWifiEnabled()) {
-                        mWiFiManager.startScan();
-                    }
+            handler.post(() -> {
+                if (mWiFiManager.isWifiEnabled()) {
+                    mWiFiManager.startScan();
                 }
             });
             return;
@@ -149,20 +148,18 @@ class WiFiUtils extends BroadcastReceiver {
             new AlertDialog.Builder(context)
                     .setTitle("WiFi还未开启")
                     .setMessage("请先开启WiFi")
-                    .setPositiveButton("去开启", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            context.registerReceiver(WiFiUtils.this, filter);
-                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            context.startActivity(intent);
-                        }
+                    .setPositiveButton("去开启", (dialog, which) -> {
+                        context.registerReceiver(WiFiUtils.this, filter);
+                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(intent);
                     })
                     .setNegativeButton("取消", null)
                     .show();
 
 //            BottomSheetDialog bsd = new BottomSheetDialog(context);//用这个弹框会不会好点？
         } else {
+            //监听扫描的结果
             context.registerReceiver(this, filter);
             mNeedScan = true;
             mWiFiManager.setWifiEnabled(true);
@@ -192,6 +189,7 @@ class WiFiUtils extends BroadcastReceiver {
     }
 
     /**
+     * 获取当前连接的WiFi名称
      * 9.0起需要ACCESS_FINE_LOCATION权限，调用前请检查权限
      * 10 起开始需要开启定位服务，提示用户去打开
      */
@@ -222,13 +220,13 @@ class WiFiUtils extends BroadcastReceiver {
             return;
         }
         final NetworkRequest request = new NetworkRequest.Builder().addTransportType(NetworkCapabilities.TRANSPORT_WIFI).build();
-        final ConnectivityManager connectivityManager = context.getSystemService(ConnectivityManager.class);
+        final ConnectivityManager cm = context.getSystemService(ConnectivityManager.class);
         final ConnectivityManager.NetworkCallback networkCallback = new ConnectivityManager.NetworkCallback() {
 
             @RequiresApi(api = Build.VERSION_CODES.Q)
             @Override
             public void onCapabilitiesChanged(Network network, NetworkCapabilities networkCapabilities) {
-                WifiInfo wifiInfo = (WifiInfo) networkCapabilities.getTransportInfo();//这个貌似要到API31才会有返回值
+                WifiInfo wifiInfo = (WifiInfo) networkCapabilities.getTransportInfo();//这个貌似要到API>=31才会有返回值
 //                Log.e("TAG", "onCapabilitiesChanged0: " + networkCapabilities.getTransportInfo());
                 if (null != wifiInfo && wifiInfo.getNetworkId() > -1) {
                     wifiNameGet.didGetWifiName(wifiInfo.getSSID());
@@ -245,10 +243,8 @@ class WiFiUtils extends BroadcastReceiver {
                 Log.e("TAG", "onUnavailable: ");
             }
         };
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            connectivityManager.requestNetwork(request, networkCallback, 800); // For request
-//        connectivityManager.registerNetworkCallback(request, networkCallback); // For listen
-        }
+        cm.requestNetwork(request, networkCallback, 800); // For request
+//        cm.registerNetworkCallback(request, networkCallback); // For listen
     }
 
     //判断定位服务是否开启
@@ -256,5 +252,91 @@ class WiFiUtils extends BroadcastReceiver {
         //从系统服务中获取定位管理器
         LocationManager lm = (LocationManager) ctx.getSystemService(Context.LOCATION_SERVICE);
         return lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
+
+
+    //----------------------------------------------------------------------------
+    /*
+    https://developer.android.com/guide/topics/connectivity/wifi-bootstrap
+    //连接WiFi示例：
+    WiFiUtils.connectWiFiBySpecifier(this, "123", null, new ConnectivityManager.NetworkCallback() {
+        @Override
+        public void onAvailable(@NonNull Network network) {
+            //回调是在主线程，耗时任务去其他线程
+            ConnectivityManager cm = getSystemService(ConnectivityManager.class);
+            //先绑定网络，如果不绑，有些手机系统使用TCP、UDP会直接报错，比如小米MIUI
+            cm.bindProcessToNetwork(network);
+
+            //做自己的业务。。。。。。
+
+            //不需要此网络了就要解绑
+            cm.bindProcessToNetwork(null);
+            //然后注销当前请求，注销后系统会自动连接到上次的网络，不注销不会自动连接
+            cm.unregisterNetworkCallback(this);
+        }
+
+        @Override
+        public void onUnavailable() {
+        }
+    });
+
+    建议：
+        如果是扫描外设，使用CompanionDeviceManager类会节约很多的步骤，比如：权限请求等
+        https://developer.android.com/guide/topics/connectivity/companion-device-pairing
+     */
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    public static void connectWiFiBySpecifier(Context context, String ssid, String password, ConnectivityManager.NetworkCallback networkCallback) {
+        WifiNetworkSpecifier.Builder builder = new WifiNetworkSpecifier.Builder()
+                .setSsidPattern(new PatternMatcher(ssid, PatternMatcher.PATTERN_LITERAL));//方式一
+        //.setSsid(ssid);
+        if (password != null) builder = builder.setWpa2Passphrase(password);
+
+        NetworkRequest request = new NetworkRequest.Builder()
+                .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                .removeCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                .setNetworkSpecifier(builder.build())
+                .build();
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        // WiFi连接回调
+        cm.requestNetwork(request, networkCallback, 15000);
+    }
+
+    //https://developer.android.com/guide/topics/connectivity/wifi-suggest
+    //Android10以上，通过suggestion连接WIFI，有些情况系统更本不了你的Suggestion，比如你的WiFi不能连接外网
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    public static void connectWiFiBySuggestion(Context context, String ssid, String password, ConnectivityManager.NetworkCallback networkCallback) {
+        WifiNetworkSuggestion.Builder builder = new WifiNetworkSuggestion.Builder()
+                .setSsid(ssid)
+                .setIsAppInteractionRequired(true); // Optional (Needs location permission)
+        if (null != password) builder.setWpa2Passphrase(password);
+        //wifiManager.removeNetworkSuggestions(suggestionsList)
+        WifiManager wm = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        int status = wm.addNetworkSuggestions(Collections.singletonList(builder.build()));
+        if (status != WifiManager.STATUS_NETWORK_SUGGESTIONS_SUCCESS) {
+            networkCallback.onUnavailable();
+            return;
+        }
+        final Timer timer = new Timer();
+        BroadcastReceiver netRec = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {//等了很久这里根本不来，所以系统未采纳建议去连接指定的WiFi
+                if (!intent.getAction().equals(
+                        WifiManager.ACTION_WIFI_NETWORK_SUGGESTION_POST_CONNECTION)) {
+                    return;
+                }
+                timer.cancel();
+                context.unregisterReceiver(this);
+                networkCallback.onAvailable(null);
+            }
+        };
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                networkCallback.onUnavailable();
+                context.unregisterReceiver(netRec);
+            }
+        }, 1000 * 20);
+        IntentFilter intentFilter = new IntentFilter(WifiManager.ACTION_WIFI_NETWORK_SUGGESTION_POST_CONNECTION);
+        context.registerReceiver(netRec, intentFilter);
     }
 }
