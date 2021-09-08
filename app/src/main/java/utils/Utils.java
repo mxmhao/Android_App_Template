@@ -3,6 +3,8 @@ package utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
@@ -13,6 +15,7 @@ import android.webkit.MimeTypeMap;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Locale;
 
 public class Utils {
     /**
@@ -111,5 +114,46 @@ public class Utils {
 
         NetworkInfo networkInfo = cm.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected() && networkInfo.getType() == ConnectivityManager.TYPE_WIFI;
+    }
+
+    /*
+    获取指定语言环境下的字符串
+    注意如果使用的是App Bundle，则需要确保禁用语言拆分或动态安装其他语言，可以在build.gradle中设置:
+    android {
+
+        ...
+        bundle {
+            language {
+                // Specifies that the app bundle should not support
+                // configuration APKs for language resources. These
+                // resources are instead packaged with each base and
+                // dynamic feature APK.
+                enableSplit = false
+            }
+        }
+    }
+     */
+    public static String getLocaleStringResource(Locale requestedLocale, int resourceId, Context context) {
+        String result;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) { // use latest api
+            Configuration config = new Configuration(context.getResources().getConfiguration());
+            config.setLocale(requestedLocale);//Locale.CHINESE; Locale.ENGLISH;
+            result = context.createConfigurationContext(config).getResources().getString(resourceId);
+        } else { // support older android versions
+            Resources resources = context.getResources();
+            Configuration conf = resources.getConfiguration();
+            Locale savedLocale = conf.locale;
+            conf.locale = requestedLocale;
+            resources.updateConfiguration(conf, null);
+
+            // retrieve resources from desired locale
+            result = resources.getString(resourceId);
+
+            // restore original locale
+            conf.locale = savedLocale;
+            resources.updateConfiguration(conf, null);
+        }
+
+        return result;
     }
 }
