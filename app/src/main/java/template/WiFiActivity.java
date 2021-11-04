@@ -1,6 +1,7 @@
 package template;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -26,7 +27,6 @@ import android.provider.Settings;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,7 +35,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * 从android 10之前，蓝牙和WiFi的所有功能只要有精确定位权限既可；10起既要精确定位权限，也要开启定位服务。
+ * 从android 9起，WiFi的所有功能只要有精确定位权限既可；9起既要定位权限，也要开启定位服务。详细看下面的链接
+ * android 10之前 蓝牙需要 ACCESS_COARSE_LOCATION 而后需要 ACCESS_FINE_LOCATION；9起蓝牙既要定位权限，也要开启定位服务。
  * WiFi扫描的限制：
  * https://developer.android.google.cn/guide/topics/connectivity/wifi-scan#wifi-scan-restrictions
  * 蓝牙扫描的限制：
@@ -45,7 +46,7 @@ import java.util.TimerTask;
  *  如果是扫描外设，使用CompanionDeviceManager类会节约很多的步骤，比如：权限请求等
  *  https://developer.android.com/guide/topics/connectivity/companion-device-pairing
  */
-public class WiFiActivity extends AppCompatActivity {
+public class WiFiActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
