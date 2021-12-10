@@ -11,6 +11,9 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk.abiFilters 'arm64-v8a','armeabi-v7a'//,'x86','x86_64'
+
+        //自定义打包名称，不完全自定义，后面自动会加上${buildType.name}
+        archivesBaseName = "Template_v${versionName}_${generateTime()}"
     }
     buildTypes {
         release {
@@ -19,6 +22,17 @@ android {
         }
     }
 }
+
+//构建时间
+def generateTime() {
+    return new Date().format("yyyy-MM-dd HH时mm分ss秒")
+}
+// 自定义打包名称，完全自定义
+//android.applicationVariants.all { variant ->
+//    variant.outputs.all {
+//        outputFileName = "Template_${buildType.name}_v${versionName}_${generateTime()}.apk"
+//    }
+//}
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
