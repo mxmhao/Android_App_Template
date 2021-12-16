@@ -45,6 +45,7 @@ public class TranslucentBarActivity extends AppCompatActivity {
         }
     }
 
+    private Handler handler;
     private View splashView;
     /**
      * 可当广告页
@@ -83,28 +84,33 @@ public class TranslucentBarActivity extends AppCompatActivity {
         ImageView iv = new ImageView(this);
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         iv.setLayoutParams(layoutParams);
+        iv.setScaleType(ImageView.ScaleType.FIT_XY);
         splashView = iv;
         iv.setImageResource(R.drawable.launcher_splash);
         ((ViewGroup) getWindow().getDecorView()).addView(iv);
 //        ((ViewGroup) getWindow().getDecorView().findViewById(android.R.id.content)).addView(iv);
+        handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(this::hideSplashView, 5000);
     }
 
+    private AnimatorListenerAdapter animatorAdapter;
     //动画隐藏启动页
-    private void hideSplash() {
+    private synchronized void hideSplashView() {
+        if (splashView == null || null != animatorAdapter) return;
+        animatorAdapter = new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                ((ViewGroup)splashView.getParent()).removeView(splashView);
+                splashView = null;
+                animatorAdapter = null;
+            }
+        };
+        ObjectAnimator animator = ObjectAnimator.ofFloat(splashView, "alpha", 1f, 0f);
+        animator.setDuration(300);//时间
+        animator.addListener(animatorAdapter);
+        animator.start();
 //            getWindow().getDecorView().setBackground(null);
 //            getWindow().setBackgroundDrawable(null);
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            ObjectAnimator animator = ObjectAnimator.ofFloat(splashView, "alpha", 1f, 0f);
-            animator.setDuration(300);//时间
-            animator.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    super.onAnimationEnd(animation);
-                    ((ViewGroup)splashView.getParent()).removeView(splashView);
-                    splashView = null;
-                }
-            });
-            animator.start();
-        }, 500);
     }
 }
