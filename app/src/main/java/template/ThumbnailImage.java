@@ -4,13 +4,16 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.widget.ImageView;
 
 import androidx.fragment.app.Fragment;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 
 public class ThumbnailImage extends Fragment {
@@ -112,6 +115,36 @@ public class ThumbnailImage extends Fragment {
         protected void onCancelled(Bitmap bitmap) {
             super.onCancelled(bitmap);
             imageView = null;
+        }
+    }
+
+    //根据base64图片创建缩略图
+    public static void createThumbImage(Context context, String base64) {
+        byte[] decode = Base64.decode(base64.getBytes(), Base64.DEFAULT);
+        //缩略图
+        if (decode.length > 32 * 1024) {
+            Bitmap bmp = BitmapFactory.decodeByteArray(decode, 0, decode.length);
+            int width = bmp.getWidth();
+            int height = bmp.getHeight();
+            Bitmap thumbBmp = null;
+            int baseLength = 150;
+            if (width > height) {
+                thumbBmp = Bitmap.createScaledBitmap(bmp, baseLength, bmp.getHeight() / (bmp.getWidth() / baseLength), true);
+            } else {
+                thumbBmp = Bitmap.createScaledBitmap(bmp, bmp.getWidth() / (bmp.getHeight() / baseLength), baseLength, true);
+            }
+            bmp.recycle();
+
+            //缩略图转成字节数组
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            thumbBmp.compress(Bitmap.CompressFormat.PNG, 100, output);
+            thumbBmp.recycle();
+            byte[] result = output.toByteArray();
+            try {
+                output.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }
