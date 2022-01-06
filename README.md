@@ -33,3 +33,4 @@
 22. [最简、最省存储的启动页设置；R.style.LauncherTheme](/app/src/main/res/values/styles.xml)
 23. [获取WiFi列表，获取当前链接的WiFi名称，API>=29连接WiFi，扫描WiFi和蓝牙等外设的建议；WiFiActivity.java](/app/src/main/java/template/WiFiActivity.java)
 24. [图片创建缩略图；ThumbnailImage.java#createThumbImage](/app/src/main/java/template/ThumbnailImage.java)
+25. [文字转语音(TTS)；UtilTemplates.java#speak](/app/src/main/java/template/UtilTemplates.java)
