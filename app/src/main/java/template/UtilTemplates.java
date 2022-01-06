@@ -9,6 +9,14 @@ import java.util.Locale;
 public class UtilTemplates {
     private static final String TAG = "UtilTemplates";
 
+    /**
+     * //android 11以上要在AndroidManifest.xml文件中加入
+     <queries>
+     <intent>
+     <action android:name="android.intent.action.TTS_SERVICE" />
+     </intent>
+     </queries>
+     */
     private TextToSpeech tts;
     public void speak(Context context, String text) {
         if (null != tts) {
