@@ -23,6 +23,7 @@ public class UtilTemplates {
             speak(text);
             return;
         }
+        //第一次会有授权框弹出
         tts = new TextToSpeech(context, status -> {
             if (status == TextToSpeech.SUCCESS) {
                 int result = tts.setLanguage(Locale.CHINA);
