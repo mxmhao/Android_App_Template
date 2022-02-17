@@ -1,8 +1,13 @@
 package template;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
+
+import androidx.annotation.StringRes;
 
 import java.util.Locale;
 
@@ -41,5 +46,26 @@ public class UtilTemplates {
 //        tts.setVoice()//设置声音
 //        tts.synthesizeToFile()//文字转换成音频文件
         tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
+    }
+
+    //获取图片长宽
+    public static BitmapFactory.Options getImage(Resources resources, @StringRes int id) {
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inJustDecodeBounds = true;//仅解码图片的长宽
+        BitmapFactory.decodeResource(resources, id , o);
+        Log.e("TAG", "initData: " + o.outWidth + ", " + o.outHeight);
+        return o;
+    }
+
+    /**
+     * 获取对应 density 下的原图，例如：当前手机 density=2.75，R.drawable.xxxx获取的图片是就近density=3的图片
+     * 但是，系统默认会把density=3的图片缩放成density=2.75的图片，但我们不想让它缩放，就用此方法
+     */
+    public static Bitmap getNoScaledImage(Resources resources, @StringRes int id) {
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inScaled = false;//设置不用根据屏幕分辨率缩放，可以得到原尺寸大小的图片
+        Bitmap bmp = BitmapFactory.decodeResource(resources, id , o);
+        Log.e("TAG", "initData: " + bmp.getWidth() + ", " + bmp.getHeight());
+        return bmp;
     }
 }
