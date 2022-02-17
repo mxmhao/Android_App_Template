@@ -1,9 +1,13 @@
 package template;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Handler;
+import android.os.Looper;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 
@@ -67,5 +71,19 @@ public class UtilTemplates {
         Bitmap bmp = BitmapFactory.decodeResource(resources, id , o);
         Log.e("TAG", "initData: " + bmp.getWidth() + ", " + bmp.getHeight());
         return bmp;
+    }
+
+    //获取剪切板的类容
+    public void getClipboardText(Context context) {
+        //如果是在app启动时获取，请在onStart之后调用，且必须延迟，不然获取不到剪切板的类容。这是Android10起开始的问题，必须是在app获取焦点后获取
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+            if (!cm.hasPrimaryClip()) return;
+
+            CharSequence text = cm.getPrimaryClip().getItemAt(0).getText();
+            if (null == text) return;
+            Log.e(TAG, "getFromClipboard text=" + text + "  " + cm.getPrimaryClipDescription().getMimeType(0));
+            cm.setPrimaryClip(ClipData.newPlainText(null, null));
+        }, 1000);
     }
 }
