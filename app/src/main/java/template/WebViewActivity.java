@@ -47,6 +47,10 @@ public class WebViewActivity extends Activity {
 
         webView.setWebViewClient(new WebViewClient() {
 
+            /*
+             * 官方注释的翻译：通知主程序页面当前开始加载。该方法只有在加载main frame时加载一次，如果一个页面有多个frame，onPageStarted只在加载main frame时调用一次。也意味着若内置frame发生变化，onPageStarted不会被调用，如：在iframe中打开url链接。
+             * 因为是 "该方法只有在加载main frame时加载一次"，所以可以肯定，此时当前页面的html源码已加载完成，此时在head中注入script正好合适
+             */
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 //这里注入js文件
