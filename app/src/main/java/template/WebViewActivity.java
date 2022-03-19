@@ -113,7 +113,7 @@ public class WebViewActivity extends Activity {
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
                 String url = request.getUrl().toString();
-                int index = url.indexOf("localDebug");
+                int index = url.indexOf("localDebug");//这个包含在 onPageStarted 中注入的js文件的路径中
                 if (index > -1) {//加载指定.js时 引导服务端加载本地Assets/www文件夹下的cordova.js
                     try {
                         return new WebResourceResponse(
