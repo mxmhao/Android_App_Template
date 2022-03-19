@@ -203,7 +203,7 @@ class WiFiUtils extends BroadcastReceiver {
             wifiNameGet.didGetWifiName(null);
             return;
         }
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
+//        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
             WifiInfo wifiInfo = wifiManager.getConnectionInfo();//就算WiFi没有开启，这个也有返回值，只是 id < 0
             Log.e("TAG", "wifiInfo：" + wifiInfo.toString()); //打印全部wifi信息
             Log.e("TAG", "SSID：" + wifiInfo.getSSID());      //打印SSID
@@ -218,33 +218,34 @@ class WiFiUtils extends BroadcastReceiver {
             }
             Log.e("TAG", "SSID：" + ssid);      //打印SSID
             wifiNameGet.didGetWifiName(ssid);
-            return;
-        }
-        final NetworkRequest request = new NetworkRequest.Builder().addTransportType(NetworkCapabilities.TRANSPORT_WIFI).build();
-        final ConnectivityManager cm = context.getSystemService(ConnectivityManager.class);
-        final ConnectivityManager.NetworkCallback networkCallback = new ConnectivityManager.NetworkCallback() {
-
-            @RequiresApi(api = Build.VERSION_CODES.Q)
-            @Override
-            public void onCapabilitiesChanged(Network network, NetworkCapabilities networkCapabilities) {
-                WifiInfo wifiInfo = (WifiInfo) networkCapabilities.getTransportInfo();//这个貌似要到API>=31才会有返回值
-//                Log.e("TAG", "onCapabilitiesChanged0: " + networkCapabilities.getTransportInfo());
-                if (null != wifiInfo && wifiInfo.getNetworkId() > -1) {
-                    wifiNameGet.didGetWifiName(wifiInfo.getSSID());
-                    Log.e("TAG", "onCapabilitiesChanged1: " + wifiInfo.getSSID());
-                } else {
-                    wifiNameGet.didGetWifiName(null);
-                    Log.e("TAG", "onCapabilitiesChanged2: " + networkCapabilities.getTransportInfo());
-                }
-            }
-
-            @Override
-            public void onUnavailable() {
-                wifiNameGet.didGetWifiName(null);
-                Log.e("TAG", "onUnavailable: ");
-            }
-        };
-        cm.requestNetwork(request, networkCallback, 800); // For request
+//            return;
+//        }
+        //-----------下面的方法在Android12以上SSID被屏蔽了，获取不到------------
+//        final NetworkRequest request = new NetworkRequest.Builder().addTransportType(NetworkCapabilities.TRANSPORT_WIFI).build();
+//        final ConnectivityManager cm = context.getSystemService(ConnectivityManager.class);
+//        final ConnectivityManager.NetworkCallback networkCallback = new ConnectivityManager.NetworkCallback() {
+//
+//            @RequiresApi(api = Build.VERSION_CODES.Q)
+//            @Override
+//            public void onCapabilitiesChanged(Network network, NetworkCapabilities networkCapabilities) {
+//                WifiInfo wifiInfo = (WifiInfo) networkCapabilities.getTransportInfo();//这个貌似要到API>=31才会有返回值
+////                Log.e("TAG", "onCapabilitiesChanged0: " + networkCapabilities.getTransportInfo());
+//                if (null != wifiInfo && wifiInfo.getNetworkId() > -1) {
+//                    wifiNameGet.didGetWifiName(wifiInfo.getSSID());
+//                    Log.e("TAG", "onCapabilitiesChanged1: " + wifiInfo.getSSID());
+//                } else {
+//                    wifiNameGet.didGetWifiName(null);
+//                    Log.e("TAG", "onCapabilitiesChanged2: " + networkCapabilities.getTransportInfo());
+//                }
+//            }
+//
+//            @Override
+//            public void onUnavailable() {
+//                wifiNameGet.didGetWifiName(null);
+//                Log.e("TAG", "onUnavailable: ");
+//            }
+//        };
+//        cm.requestNetwork(request, networkCallback, 800); // For request
 //        cm.registerNetworkCallback(request, networkCallback); // For listen
     }
 
