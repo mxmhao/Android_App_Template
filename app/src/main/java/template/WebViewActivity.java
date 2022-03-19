@@ -3,6 +3,7 @@ package template;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.DownloadListener;
 import android.webkit.JavascriptInterface;
+import android.webkit.MimeTypeMap;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
@@ -21,6 +23,7 @@ import android.webkit.WebViewClient;
 
 import androidx.annotation.RequiresApi;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import test.mxm.android_app_template.BuildConfig;
@@ -43,6 +46,21 @@ public class WebViewActivity extends Activity {
         url = getIntent().getStringExtra(URL_KEY);
 
         webView.setWebViewClient(new WebViewClient() {
+
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                //这里注入js文件
+                String script = "javascript:" +
+                        "var sc = document.createElement('script');\n" +
+//                        "sc.src = 'file:///android_asset/www/localDebug/cordova.js';\n" +
+                        "sc.src = 'http://localhost/localDebug/cordova.js';\n" +
+                        "sc.type = 'text/javascript';\n" +
+                        "document.head.appendChild(sc); ";
+//            script = "javascript:document.head.innerHTML += \"<script type='text/javascript' src='file:///android_asset/www/cordova.js'></script>\";";
+                view.evaluateJavascript(script, null);
+
+                super.onPageStarted(view, url, favicon);
+            }
 
             @Override
             public void onPageFinished(WebView view, String url) {
@@ -85,6 +103,24 @@ public class WebViewActivity extends Activity {
                     view.loadUrl("about:blank");
                     showErrorAlert();
                 }
+            }
+
+            private final MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+            @Override
+            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+                String url = request.getUrl().toString();
+                int index = url.indexOf("localDebug");
+                if (index > -1) {//加载指定.js时 引导服务端加载本地Assets/www文件夹下的cordova.js
+                    try {
+                        return new WebResourceResponse(
+                                mimeTypeMap.getExtensionFromMimeType(MimeTypeMap.getFileExtensionFromUrl(url)),
+                                "UTF-8",
+                                WebViewActivity.this.getAssets().open(url.substring(index).replace("localDebug", "www")));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return super.shouldInterceptRequest(view, request);
             }
         });
         //android 6.0 以下的错误处理
