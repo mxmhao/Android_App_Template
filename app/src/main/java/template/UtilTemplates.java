@@ -6,13 +6,17 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.StatFs;
 import android.speech.tts.TextToSpeech;
+import android.text.format.Formatter;
 import android.util.Log;
 
 import androidx.annotation.StringRes;
 
+import java.io.File;
 import java.util.Locale;
 
 public class UtilTemplates {
@@ -83,7 +87,66 @@ public class UtilTemplates {
             CharSequence text = cm.getPrimaryClip().getItemAt(0).getText();
             if (null == text) return;
             Log.e(TAG, "getFromClipboard text=" + text + "  " + cm.getPrimaryClipDescription().getMimeType(0));
-            cm.setPrimaryClip(ClipData.newPlainText(null, null));
+            // 设置剪切板，8.0及以下系统要在主线程中调用，不然会设置失败
+            cm.setPrimaryClip(ClipData.newPlainText(null, null));//这里是用设置的null方式清空
         }, 1000);
+    }
+
+    /**
+     * 获取指定文件夹大小
+     */
+    public static long getDirSize(String dirPath) {
+        return getDirSize(new File(dirPath));
+    }
+
+    /**
+     * 获取指定文件夹大小
+     */
+    public static long getDirSize(File dir) {
+        if (null == dir || !dir.exists()) return 0;
+
+        if (dir.isDirectory()) {
+            File[] files = dir.listFiles();
+            if (null == files || files.length == 0) return 0;
+
+            long size = 0;
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    size = size + getDirSize(file);
+                } else {
+                    size += file.length();
+                }
+            }
+
+            return size;
+        }
+        return dir.length();
+    }
+
+    /**
+     * 获取某个目录的可用空间
+     */
+    public static long getAvailableSpace(String path) {
+        StatFs statfs = new StatFs(path);
+        long size = statfs.getBlockSizeLong();//获取分区的大小
+        long count = statfs.getAvailableBlocksLong();//获取可用分区块的个数
+        return size * count;// = statfs.getAvailableBytes()
+    }
+    /**
+     * 获取手机内部存储可用空间
+     */
+    public static long getDataAvailableSpace() {
+        return new StatFs(Environment.getDataDirectory().getAbsolutePath()).getAvailableBytes();
+    }
+    /**
+     * 测试
+     */
+    public static void showAvailableSize(Context context) {
+        long romSize = getAvailableSpace(Environment.getDataDirectory().getAbsolutePath());//手机内部存储大小
+        long sdSize = getAvailableSpace(Environment.getExternalStorageDirectory().getAbsolutePath());//外部存储大小
+        long dataSize = getAvailableSpace("/data");//外部存储大小
+        Log.e(TAG, "showAvailableSize: rom: " + Formatter.formatFileSize(context, romSize));
+        Log.e(TAG, "showAvailableSize: sd: " + Formatter.formatFileSize(context, sdSize));
+        Log.e(TAG, "showAvailableSize: sd: " + Formatter.formatFileSize(context, dataSize));
     }
 }

@@ -36,3 +36,5 @@
 25. [文字转语音(TTS)；UtilTemplates.java#speak](/app/src/main/java/template/UtilTemplates.java)
 26. [获取对应 density 下的原图；UtilTemplates.java#getNoScaledImage](/app/src/main/java/template/UtilTemplates.java)
 27. [获取剪切板的内容；UtilTemplates.java#getClipboardText](/app/src/main/java/template/UtilTemplates.java)
+28. [获取指定文件夹大小；UtilTemplates.java#getDirSize](/app/src/main/java/template/UtilTemplates.java)
+29. [获取存储可用空间大小；UtilTemplates.java#getAvailableSpace](/app/src/main/java/template/UtilTemplates.java)
