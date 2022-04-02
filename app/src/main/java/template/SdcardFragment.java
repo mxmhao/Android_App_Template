@@ -35,7 +35,7 @@ public class SdcardFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        File[] files = context.getExternalFilesDirs(null);
+        File[] files = context.getExternalFilesDirs(null);// 传参Environment.MEDIA_MOUNTED ？
         if (files.length < 2) return;//没有外置SD卡
 
         if (BuildConfig.DEBUG) {
