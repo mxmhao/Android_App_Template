@@ -115,6 +115,7 @@ public class UtilTemplates {
         for (File file : files) {
             if (file.isDirectory()) {
                 size = size + getDirSize(file);
+//                size = size + file.length() + getDirSize(file);//文件夹本身的长度要不要加上？
             } else {
                 size += file.length();
             }
