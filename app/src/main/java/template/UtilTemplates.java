@@ -105,22 +105,22 @@ public class UtilTemplates {
     public static long getDirSize(File dir) {
         if (null == dir || !dir.exists()) return 0;
 
-        if (dir.isDirectory()) {
-            File[] files = dir.listFiles();
-            if (null == files || files.length == 0) return 0;
-
-            long size = 0;
-            for (File file : files) {
-                if (file.isDirectory()) {
-                    size = size + getDirSize(file);
-                } else {
-                    size += file.length();
-                }
-            }
-
-            return size;
+        if (!dir.isDirectory()) {
+            return dir.length();
         }
-        return dir.length();
+        File[] files = dir.listFiles();
+        if (null == files || files.length == 0) return 0;
+
+        long size = 0;
+        for (File file : files) {
+            if (file.isDirectory()) {
+                size = size + getDirSize(file);
+            } else {
+                size += file.length();
+            }
+        }
+
+        return size;
     }
 
     /**
