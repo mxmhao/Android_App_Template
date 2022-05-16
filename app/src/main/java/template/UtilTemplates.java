@@ -150,4 +150,64 @@ public class UtilTemplates {
         Log.e(TAG, "showAvailableSize: sd: " + Formatter.formatFileSize(context, sdSize));
         Log.e(TAG, "showAvailableSize: sd: " + Formatter.formatFileSize(context, dataSize));
     }
+
+    /**
+     * 原C语言的算法：
+     static unsigned short const kCrc16tab[] = {
+     0x0000, 0x1021, 0x2042, 0x3063, 0x4084, 0x50a5, 0x60c6, 0x70e7,
+     0x8108, 0x9129, 0xa14a, 0xb16b, 0xc18c, 0xd1ad, 0xe1ce, 0xf1ef,
+     };
+     static unsigned short crc16_xmodem(unsigned char *ptr, unsigned int len)
+     {
+     unsigned short crc = 0;
+     unsigned char ch = 0;
+
+     printf("2-len: %d\n", len);
+     while (len-- != 0)
+     {
+     ch = crc >> 12;
+     crc <<= 4;
+     crc ^= kCrc16tab[ch ^ (*ptr / 16)];
+
+     ch = crc >> 12;
+     crc <<= 4;
+     crc ^= kCrc16tab[ch ^ (*ptr & 0x0f)];
+     ptr++;
+     }
+     return crc;
+     }
+     */
+    public static short crc16Xmodem(byte[] bytes, final int off, final int len) {
+        final int[] crc16tab = {
+                0x0000, 0x1021, 0x2042, 0x3063, 0x4084, 0x50a5, 0x60c6, 0x70e7,
+                0x8108, 0x9129, 0xa14a, 0xb16b, 0xc18c, 0xd1ad, 0xe1ce, 0xf1ef,
+        };
+        int count = off + len;
+        int ptr = off;
+        short crc = 0;
+        byte ch;
+        while (count-- != off) {
+            /*
+             这里是仿C语言算法，C语言的 '>>' 高位会补0；网上查询说Java的 '>>>' 也是 高位会补0，但是遇到负数时，高位没有补0，这是个bug？
+             这段代码在"JDK1.8"上运行可以看到高位没有补0
+             public static void main(String[] args) {
+                short aa = -1;
+                System.out.println(String.format("%X", aa >>> 12));
+                System.out.println(String.format("%X", aa >> 12));
+                System.out.println(String.format("%X", (short)(aa >>> 12)));
+                System.out.println(String.format("%X", (short)(aa >> 12)));
+            }
+             */
+            ch = (byte) ((crc >>> 12) & 0x000f);
+            crc <<= 4;
+            crc ^= crc16tab[(ch ^ (bytes[ptr] / 16))];
+
+            ch = (byte) ((crc >>> 12) & 0x000f);
+            crc <<= 4;
+
+            crc ^= crc16tab[(ch ^ (bytes[ptr] & 0x0f))];
+            ptr++;
+        }
+        return crc;
+    }
 }
