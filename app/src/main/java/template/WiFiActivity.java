@@ -96,6 +96,12 @@ class WiFiUtils extends BroadcastReceiver {
                 break;
             case WifiManager.SCAN_RESULTS_AVAILABLE_ACTION://wifi列表变化
                 mContext.unregisterReceiver(this);
+
+                // EXTRA_RESULTS_UPDATED 的值必须为true，否则getScanResults返回的是最近一次扫描成功的结果，导致一些已经关闭的热点也会存在缓存中
+                if (intent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false)) {
+                    mScanResults.didWiFiScanResult(null);
+                    return;
+                }
                 List<ScanResult> scanResults = mWiFiManager.getScanResults();
 
                 ArrayList<String> list = new ArrayList<>(5);
