@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
@@ -16,8 +17,26 @@ import android.util.Log;
 
 import androidx.annotation.StringRes;
 
+import java.io.Closeable;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
 import java.util.Locale;
+
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
 
 public class UtilTemplates {
     private static final String TAG = "UtilTemplates";
@@ -209,5 +228,133 @@ public class UtilTemplates {
             ptr++;
         }
         return crc;
+    }
+
+    // KeyStore 加载证书，Android 未限制必须是BKS格式的证书：https://developer.android.com/training/articles/security-ssl#java 文档中介绍的很详细，建议仔细阅读
+    public static SSLSocketFactory getSSLSocketFactory(InputStream keyStore, String password) throws UnsupportedOperationException {
+        // 此方式只支持.bks的证书
+        try{
+            KeyStore trustStore = KeyStore.getInstance("BKS");
+            trustStore.load(keyStore, password.toCharArray());
+//            keyStore.close();
+            TrustManagerFactory tmf = TrustManagerFactory.getInstance("X509");
+            tmf.init(trustStore);
+            TrustManager[] tm = tmf.getTrustManagers();
+            SSLContext ctx = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                // Android 10 开始支持1.3
+                ctx = SSLContext.getInstance("TLSv1.3");
+            } else {
+                ctx = SSLContext.getInstance("TLSv1.2");
+            }
+            ctx.init(null, tm, null);
+
+            return ctx.getSocketFactory();
+        } catch (KeyStoreException | CertificateException | IOException | NoSuchAlgorithmException | KeyManagementException e) {
+            throw new UnsupportedOperationException(e);
+        }
+    }
+
+    public static SSLSocketFactory getSSLSocketFactory2(InputStream keyStore) throws UnsupportedOperationException {
+        // 这是不带密码的.bks的证书
+        try{
+            KeyStore trustStore = KeyStore.getInstance("BKS");
+            trustStore.load(keyStore, new char[0]);
+//            keyStore.close();
+            TrustManagerFactory tmf = TrustManagerFactory.getInstance("X509");
+            tmf.init(trustStore);
+            TrustManager[] tm = tmf.getTrustManagers();
+            SSLContext ctx = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                // Android 10 开始支持1.3
+                ctx = SSLContext.getInstance("TLSv1.3");
+            } else {
+                ctx = SSLContext.getInstance("TLSv1.2");
+            }
+            ctx.init(null, tm, null);
+
+            return ctx.getSocketFactory();
+        } catch (KeyStoreException | CertificateException | IOException | NoSuchAlgorithmException | KeyManagementException e) {
+            throw new UnsupportedOperationException(e);
+        }
+    }
+
+    // CertificateFactory 加载证书，然后设置到 KeyStore
+    public static SSLSocketFactory getSSLSocketFactory(InputStream keyStore) throws UnsupportedOperationException {
+        // 此方式支持各种 X.509 标准格式的证书，如：crt、cer、der等，开发者最好自己测试一遍
+        try{
+            // X.509 或 X509 都可
+            CertificateFactory cf = CertificateFactory.getInstance("X.509");
+            // 只包含一个证书
+            Certificate ca = cf.generateCertificate(keyStore);
+            // 文件包含多个证书
+//            Collection<? extends Certificate> ces = cf.generateCertificates(keyStore);
+            KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            trustStore.load(null, null);
+            trustStore.setCertificateEntry("ca", ca);
+            // X509 可，X.509 报错
+//            TrustManagerFactory tmf = TrustManagerFactory.getInstance("X509");
+            TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            tmf.init(trustStore);
+            TrustManager[] tm = tmf.getTrustManagers();
+            SSLContext ctx = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                // Android 10 开始支持1.3
+                ctx = SSLContext.getInstance("TLSv1.3");
+            } else {
+                ctx = SSLContext.getInstance("TLSv1.2");
+            }
+            ctx.init(null, tm, null);
+
+            return ctx.getSocketFactory();
+        } catch (KeyStoreException | CertificateException | IOException | NoSuchAlgorithmException | KeyManagementException e) {
+            throw new UnsupportedOperationException(e);
+        } finally {
+            streamClose(keyStore);
+        }
+    }
+
+    // KeyStore 空InputStream，KeyManagerFactory加载，这种用的少
+    public static SSLSocketFactory getSSLSocketFactory2(InputStream keyStore, String password) throws UnsupportedOperationException {
+        // 此方式是双向验证证书？
+        try{
+            // X.509 或 X509 都可
+            CertificateFactory cf = CertificateFactory.getInstance("X.509");
+            // 只包含一个证书
+            Certificate ca = cf.generateCertificate(keyStore);
+//            keyStore.close();
+            // 文件包含多个证书
+//            Collection<? extends Certificate> ces = cf.generateCertificates(keyStore);
+            KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            // KeyStore 空InputStream
+            trustStore.load(null, null);
+            trustStore.setCertificateEntry("ca", ca);
+            KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+            kmf.init(trustStore, null);
+            KeyManager[] kms = kmf.getKeyManagers();
+            // X509 可，X.509 报错
+//            TrustManagerFactory tmf = TrustManagerFactory.getInstance("X509");
+            TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            tmf.init(trustStore);
+            TrustManager[] tm = tmf.getTrustManagers();
+            SSLContext ctx = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                // Android 10 开始支持1.3
+                ctx = SSLContext.getInstance("TLSv1.3");
+            } else {
+                ctx = SSLContext.getInstance("TLSv1.2");
+            }
+            ctx.init(kms, tm, null);
+
+            return ctx.getSocketFactory();
+        } catch (KeyStoreException | CertificateException | IOException | NoSuchAlgorithmException | KeyManagementException | UnrecoverableKeyException e) {
+            throw new UnsupportedOperationException(e);
+        }
+    }
+
+    private static void streamClose(Closeable closeable) {
+        try {
+            closeable.close();
+        } catch (IOException ignored) {}
     }
 }
