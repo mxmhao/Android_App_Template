@@ -9,6 +9,7 @@ import androidx.annotation.IntDef;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -20,6 +21,7 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import test.mxm.android_app_template.BuildConfig;
@@ -185,5 +187,95 @@ public class AES {
             put("SecureRandom.SHA1PRNG", "org.apache.harmony.security.provider.crypto.SHA1PRNG_SecureRandomImpl");
             put("SecureRandom.SHA1PRNG ImplementedIn", "Software");
         }
+    }
+
+    // 向量
+    private static final byte[] IV = new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6};
+
+    /**
+     * AES加密
+     * @param data 要加密的数据
+     * @param key 密钥，长度必须是8的整倍数？
+     * @return 加密后的数据
+     */
+    public static byte[] encryptAES128CBC(byte[] data, byte[] key) {
+        try {
+            // iOS 只支持 PKCS7Padding 加密，或者 iOS 也用NoPadding自己补齐，Android PKCS7Padding 和 PKCS5Padding 都支持。AES/CBC/PKCS7Padding  AES/ECB/PKCS5Padding
+            @SuppressLint("GetInstance")
+            Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
+
+            cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key, "AES"), new IvParameterSpec(IV));
+            int blockSize = cipher.getBlockSize();
+            int length = data.length;
+            if (length % blockSize == 0) return cipher.doFinal(data);
+
+            // 使用 NoPadding 就要自己补齐不足的字节
+            length = length + (blockSize - (length % blockSize));
+            byte[] newData = new byte[length];
+            System.arraycopy(data, 0, newData, 0, data.length);
+            return cipher.doFinal(newData);
+        } catch (NoSuchAlgorithmException | InvalidKeyException | InvalidAlgorithmParameterException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException e) {
+            Log.e(TAG, "aes128encrypt: ", e);
+        }
+
+        return null;
+    }
+
+    public static byte[] decryptUseAES128CBC(byte[] data, byte[] key) {
+        try {
+            @SuppressLint("GetInstance")
+            Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
+            cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key, "AES"), new IvParameterSpec(IV));
+            return trimBytes(cipher.doFinal(data));
+        } catch (NoSuchAlgorithmException | InvalidKeyException | InvalidAlgorithmParameterException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException e) {
+            Log.e(TAG, "aes128encrypt: ", e);
+        }
+
+        return null;
+    }
+
+    public static byte[] trimBytes(byte[] bytes) {
+        int useLen;
+        for (useLen = bytes.length - 1; useLen >= 0; useLen--) {
+            if (0x00 != bytes[useLen]) {
+                byte[] newBytes = new byte[useLen + 1];
+                System.arraycopy(bytes, 0, newBytes, 0, newBytes.length);
+                return newBytes;
+            }
+        }
+        if (bytes.length == 16) {
+            return new byte[]{bytes[0]};
+        }
+        return bytes;
+    }
+
+    public static byte[] encryptAES128CBCPKCS7(byte[] data, byte[] key) {
+        try {
+            // iOS 只支持 PKCS7Padding 加密，或者 iOS 也用NoPadding自己补齐，Android PKCS7Padding 和 PKCS5Padding 都支持。AES/CBC/PKCS7Padding  AES/ECB/PKCS5Padding
+            @SuppressLint("GetInstance")
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7Padding");
+
+            // ECB 不需要 IvParameterSpec
+            cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key, "AES"), new IvParameterSpec(IV));
+            return cipher.doFinal(data);
+        } catch (NoSuchAlgorithmException | InvalidKeyException | InvalidAlgorithmParameterException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException e) {
+            Log.e(TAG, "aes128encrypt: ", e);
+        }
+
+        return null;
+    }
+
+    public static byte[] decryptUseAES128CBCPKCS7(byte[] data, byte[] key) {
+        try {
+            @SuppressLint("GetInstance")
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7Padding");
+            // ECB 不需要 IvParameterSpec
+            cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key, "AES"), new IvParameterSpec(IV));
+            return cipher.doFinal(data);
+        } catch (NoSuchAlgorithmException | InvalidKeyException | InvalidAlgorithmParameterException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException e) {
+            Log.e(TAG, "aes128encrypt: ", e);
+        }
+
+        return null;
     }
 }
