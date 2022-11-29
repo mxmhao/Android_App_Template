@@ -190,7 +190,7 @@ public class AES {
     }
 
     // 向量
-    private static final byte[] IV = new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6};
+    private static final byte[] IV = new byte[]{8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 7, 6, 5};
 
     /**
      * AES加密
