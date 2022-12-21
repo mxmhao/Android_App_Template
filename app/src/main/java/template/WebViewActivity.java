@@ -28,6 +28,10 @@ import java.util.HashMap;
 
 import test.mxm.android_app_template.BuildConfig;
 
+/*
+Cordova（https://github.com/apache/cordova-android）项目源码是一个巨大的教科书，
+如果在使用WebView的过程中有些功能不知道怎么实现，可以在源码中找到非常好的答案
+ */
 public class WebViewActivity extends Activity {
     private final String TAG = "WebActivity";
 
@@ -45,6 +49,7 @@ public class WebViewActivity extends Activity {
         webView = new WebView(this);//请加载自己的WebView
         url = getIntent().getStringExtra(URL_KEY);
 
+        // WebViewClient 和 WebChromeClient 好像有一个必须设置，不记得是哪个了，否则无法加载本地文件。
         webView.setWebViewClient(new WebViewClient() {
 
             /*
@@ -66,11 +71,21 @@ public class WebViewActivity extends Activity {
                 super.onPageStarted(view, url, favicon);
             }
 
+            /*
+             * 如果在 onPageStarted 中注入本地js太早，可以考虑在 onPageFinished 中注入
+             */
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 ProgressHUD.remove();
+
+                // 必须在doUpdateVisitedHistory、onPageFinished后清理缓存，否则无效
+                view.clearHistory();
             }
+            /*@Override
+            public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
+                super.doUpdateVisitedHistory(view, url, isReload);
+            }*/
 
             @Override//解决部分机型打开Url会提示使用外部浏览器
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -112,6 +127,7 @@ public class WebViewActivity extends Activity {
             private final MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+                //WebViewAssetLoader是一个非常好用的用来加载本地文件的工具类。具体玩法可以看：https://github.com/apache/cordova-android/blob/master/framework/src/org/apache/cordova/engine/SystemWebViewClient.java
                 String url = request.getUrl().toString();
                 int index = url.indexOf("localDebug");//这个包含在 onPageStarted 中注入的js文件的路径中
                 if (index > -1) {//加载指定.js时 引导服务端加载本地Assets/www文件夹下的cordova.js
