@@ -1,5 +1,6 @@
 package utils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -10,8 +11,11 @@ import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.text.TextUtils;
+import android.util.Log;
 import android.webkit.MimeTypeMap;
 
+import java.lang.reflect.Method;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -155,5 +159,56 @@ public class Utils {
         }
 
         return result;
+    }
+
+    /**
+     * 判断当前是否为鸿蒙系统
+     *
+     * @return 是否是鸿蒙系统，是：true，不是：false
+     */
+    private static boolean isHarmonyOS() {
+        try {
+            Class<?> buildExClass = Class.forName("com.huawei.system.BuildEx");
+            Object osBrand = buildExClass.getMethod("getOsBrand").invoke(buildExClass);
+            if (osBrand == null) {
+                return false;
+            }
+            return "harmony".equalsIgnoreCase(osBrand.toString()); //log打印为： harmony
+        } catch (Throwable e) {
+            return false;
+        }
+    }
+
+    /**
+     * 获取鸿蒙系统 Version
+     *
+     * @return HarmonyOS Version
+     */
+    public static String getHarmonyVersion() {
+        // HarmonyOS系统版本号
+        return getProp("hw_sc.build.platform.version", "unknown");
+        // HarmonyOS SDK版本号，与系统版本号不同
+//        return getProp("hw_sc.build.os.version", "");
+    }
+
+    public static String getHarmonySdkInt() {
+//        return getProp("hw_sc.build.platform.version.sdk", "");
+        return getProp("hw_sc.build.os.apiversion", "unknown");
+    }
+
+    private static String getProp(String property, String defaultValue) {
+        try {
+            @SuppressLint("PrivateApi")
+            Class<?> spClz = Class.forName("android.os.SystemProperties");
+            Method method = spClz.getDeclaredMethod("get", String.class);
+            String value = (String) method.invoke(spClz, property);
+            if (TextUtils.isEmpty(value)) {
+                return defaultValue;
+            }
+            return value;
+        } catch (Throwable e) {
+            Log.e("Utils", "getProp: ", e);
+        }
+        return defaultValue;
     }
 }
