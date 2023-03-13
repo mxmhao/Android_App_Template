@@ -15,6 +15,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
+        <activity android:name="template.WiFiActivity"
+            android:exported="true">
+            <intent-filter>
+                <!-- 假设这个是主启动 activity，主启动 activity 必须包含以下两个条件 -->
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <!-- 加上安卓的 Launcher 无法设置的条件，随便设置一个条件都可例如这个：
+                    <data android:scheme="WhatTheNB"/>
+                    可导致 Launcher 上不显示 app的 icon
+                     如果想在主activity保留这个data，又不想在 Launcher 上隐藏app icon，那就另起一个intent-filter
+                -->
+            </intent-filter>
+        </activity>
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="test.mxm.FileProvider"
