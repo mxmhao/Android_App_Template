@@ -10,11 +10,12 @@ import android.os.Looper;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowInsetsController;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import test.mxm.android_app_template.R;
 
@@ -27,19 +28,28 @@ public class TranslucentBarActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             Window window = getWindow();
             //这个会把底部的导航栏的背面也用上，官方注释说可以与WindowInsets.Type.statusBars()等配合，但是没测试出来效果
-            window.setDecorFitsSystemWindows(false);
-//            window.getAttributes().setFitInsetsTypes(WindowInsets.Type.statusBars());
-            //高亮显示状态栏，黑色
-            window.getDecorView().getWindowInsetsController().setSystemBarsAppearance(WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS, WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS);
-            //获取导航栏高度
-            int resourceId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
-            if (0 != resourceId) {
-                int navigation_bar_height = getResources().getDimensionPixelSize(resourceId);
-                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) window.getDecorView().findViewById(android.R.id.content).getLayoutParams();
-                //防止底部被导航栏遮住
-                layoutParams.bottomMargin = navigation_bar_height;
-//                window.getDecorView().findViewById(android.R.id.content).setPadding(0, 0, 0, navigation_bar_height);
-            }
+//            window.setDecorFitsSystemWindows(false);
+            WindowCompat.setDecorFitsSystemWindows(window, false);
+            // 高亮显示状态栏，字体黑色
+//            ViewCompat.getWindowInsetsController(window.getDecorView()).setAppearanceLightStatusBars(true);
+            // 抬高底部方式一：
+            ViewCompat.setOnApplyWindowInsetsListener(window.getDecorView().findViewById(android.R.id.content), (v, insets) -> {
+                int navHeight = insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom;
+                v.setPadding(0, 0, 0, navHeight);
+                return insets;
+            });
+//            // 高亮显示状态栏，字体黑色
+//            window.getDecorView().getWindowInsetsController().setSystemBarsAppearance(WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS, WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS);
+//            // 抬高底部方式二：
+//            // 获取导航栏高度
+//            int resourceId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
+//            if (0 != resourceId) {
+//                int navigation_bar_height = getResources().getDimensionPixelSize(resourceId);
+//                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) window.getDecorView().findViewById(android.R.id.content).getLayoutParams();
+//                // 防止底部被导航栏遮住
+//                layoutParams.bottomMargin = navigation_bar_height;
+////                window.getDecorView().findViewById(android.R.id.content).setPadding(0, 0, 0, navigation_bar_height);
+//            }
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
