@@ -65,6 +65,7 @@ public class Utils {
                      * IPv4、IPv6不会发起网络请求，其它的会*/
                     ia = InetAddress.getByName("ABCD:EF01:2345:6789:ABCD:EF01:2345:6789%8");
                     ip = ia.getHostName();
+//                    ia.isReachable(2000); // Android自带的ping功能，判断地址是否可达
                 } catch (UnknownHostException e) {//当ip地址不正确，或者主机名、域名连接不上时就会报错
                     return;
                 }
