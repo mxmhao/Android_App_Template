@@ -17,6 +17,7 @@ import test.mxm.android_app_template.R;
 public class FloatDragBtnActivity extends AppCompatActivity {
 
     public static final String TAG = "FloatDragBtnActivity";
+    private static final int STILLNESS = 24;
 
     @SuppressLint("ClickableViewAccessibility, InflateParams")
     @Override
@@ -77,7 +78,7 @@ public class FloatDragBtnActivity extends AppCompatActivity {
                         touchY = (int)event.getRawY();// y轴拖动的绝对距离
                         touchX -= dx;
                         touchY -= dy;
-                        if (Math.abs(touchX - beginX) < 40 && Math.abs(touchY - beginY) < 40) {
+                        if (Math.abs(touchX - beginX) < STILLNESS && Math.abs(touchY - beginY) < STILLNESS) {
                             break;
                         }
                         if (touchX < 0) {
@@ -98,7 +99,7 @@ public class FloatDragBtnActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_UP:
                         Log.e(TAG, "onTouch: ACTION_UP " + Math.abs(touchX - beginX) + ", " + Math.abs(touchY - beginY));
                         // 以下5行代码必须这个么写，先后顺序不能颠倒，否则无法触发 Click 事件
-                        if (Math.abs(touchX - beginX) < 40 && Math.abs(touchY - beginY) < 40) {
+                        if (Math.abs(touchX - beginX) < STILLNESS && Math.abs(touchY - beginY) < STILLNESS) {
                             v.onTouchEvent(event);
                         }
                         v.setPressed(false);
