@@ -26,6 +26,7 @@ import android.os.PatternMatcher;
 import android.provider.Settings;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
 import java.util.ArrayList;
@@ -200,7 +201,7 @@ class WiFiUtils extends BroadcastReceiver {
      * 9.0起需要ACCESS_FINE_LOCATION权限，调用前请检查权限
      * 10 起开始需要开启定位服务，提示用户去打开
      */
-    public static void getWiFiName(Context context, final WifiNameGet wifiNameGet) {
+    public static void getWiFiName(Context context, @NonNull final WifiNameGet wifiNameGet) {
 //        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 //        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //        context.startActivity(intent);
@@ -209,7 +210,7 @@ class WiFiUtils extends BroadcastReceiver {
             wifiNameGet.didGetWifiName(null);
             return;
         }
-//        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
             WifiInfo wifiInfo = wifiManager.getConnectionInfo();//就算WiFi没有开启，这个也有返回值，只是 id < 0
             Log.e("TAG", "wifiInfo：" + wifiInfo.toString()); //打印全部wifi信息
             Log.e("TAG", "SSID：" + wifiInfo.getSSID());      //打印SSID
@@ -224,35 +225,42 @@ class WiFiUtils extends BroadcastReceiver {
             }
             Log.e("TAG", "SSID：" + ssid);      //打印SSID
             wifiNameGet.didGetWifiName(ssid);
-//            return;
-//        }
-        //-----------下面的方法在Android12以上SSID被屏蔽了，获取不到------------
-//        final NetworkRequest request = new NetworkRequest.Builder().addTransportType(NetworkCapabilities.TRANSPORT_WIFI).build();
-//        final ConnectivityManager cm = context.getSystemService(ConnectivityManager.class);
-//        final ConnectivityManager.NetworkCallback networkCallback = new ConnectivityManager.NetworkCallback() {
-//
-//            @RequiresApi(api = Build.VERSION_CODES.Q)
-//            @Override
-//            public void onCapabilitiesChanged(Network network, NetworkCapabilities networkCapabilities) {
-//                WifiInfo wifiInfo = (WifiInfo) networkCapabilities.getTransportInfo();//这个貌似要到API>=31才会有返回值
-////                Log.e("TAG", "onCapabilitiesChanged0: " + networkCapabilities.getTransportInfo());
-//                if (null != wifiInfo && wifiInfo.getNetworkId() > -1) {
-//                    wifiNameGet.didGetWifiName(wifiInfo.getSSID());
-//                    Log.e("TAG", "onCapabilitiesChanged1: " + wifiInfo.getSSID());
-//                } else {
-//                    wifiNameGet.didGetWifiName(null);
-//                    Log.e("TAG", "onCapabilitiesChanged2: " + networkCapabilities.getTransportInfo());
-//                }
-//            }
-//
-//            @Override
-//            public void onUnavailable() {
-//                wifiNameGet.didGetWifiName(null);
-//                Log.e("TAG", "onUnavailable: ");
-//            }
-//        };
-//        cm.requestNetwork(request, networkCallback, 800); // For request
-//        cm.registerNetworkCallback(request, networkCallback); // For listen
+            return;
+        }
+
+        final NetworkRequest request = new NetworkRequest.Builder()
+                .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                .removeCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                .build();
+        final ConnectivityManager cm = context.getSystemService(ConnectivityManager.class);
+        final ConnectivityManager.NetworkCallback networkCallback = new ConnectivityManager.NetworkCallback(ConnectivityManager.NetworkCallback.FLAG_INCLUDE_LOCATION_INFO) {
+            @RequiresApi(api = Build.VERSION_CODES.Q)
+            @Override
+            public void onCapabilitiesChanged(Network network, NetworkCapabilities networkCapabilities) {
+                //这个要到API>=31才会有返回值，并且要使用 FLAG_INCLUDE_LOCATION_INFO
+                WifiInfo wifiInfo = (WifiInfo) networkCapabilities.getTransportInfo();
+//                Log.e("TAG", "onCapabilitiesChanged0: " + networkCapabilities.getTransportInfo());
+                if (null != wifiInfo && wifiInfo.getNetworkId() > -1) {
+                    String ssid = wifiInfo.getSSID();
+                    if (ssid.startsWith("\"") && ssid.endsWith("\"")) {
+                        ssid = ssid.substring(1, ssid.length() - 1);//去掉首尾的双引号
+                    }
+                    wifiNameGet.didGetWifiName(ssid);
+                    Log.e("TAG", "onCapabilitiesChanged1: " + ssid);
+                } else {
+                    wifiNameGet.didGetWifiName(null);
+                    Log.e("TAG", "onCapabilitiesChanged2: " + networkCapabilities.getTransportInfo());
+                }
+            }
+
+            @Override
+            public void onUnavailable() {
+                wifiNameGet.didGetWifiName(null);
+                Log.e("TAG", "onUnavailable: ");
+            }
+        };
+        cm.requestNetwork(request, networkCallback, 100); // For request，这个只请求一下
+//        cm.registerNetworkCallback(request, networkCallback); // For listen 这个是实时监听网络
     }
 
     //判断定位服务是否开启
