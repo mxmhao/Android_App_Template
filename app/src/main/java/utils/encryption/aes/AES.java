@@ -118,8 +118,8 @@ public class AES {
         '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
     };
     //字节数组转16进制字符串
-    private static String byte2HexString(byte buf[]) {
-        char chs[] = new char[buf.length * 2];
+    private static String byte2HexString(byte[] buf) {
+        char[] chs = new char[buf.length * 2];
 //        StringBuilder sb = new StringBuilder(buf.length * 2);//字符串很长的时候用此类
 //        String tp;
         int index = 0;
