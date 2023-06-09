@@ -27,7 +27,7 @@ public class TranslucentBarActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             Window window = getWindow();
-            //这个会把底部的导航栏的背面也用上，官方注释说可以与WindowInsets.Type.statusBars()等配合，但是没测试出来效果
+            // 这个会把底部的导航栏的背面也用上，官方注释说可以与WindowInsets.Type.statusBars()等配合，但是没测试出来效果
 //            window.setDecorFitsSystemWindows(false);
             WindowCompat.setDecorFitsSystemWindows(window, false);
             // 高亮显示状态栏，字体黑色
@@ -41,7 +41,7 @@ public class TranslucentBarActivity extends AppCompatActivity {
 //            // 高亮显示状态栏，字体黑色
 //            window.getDecorView().getWindowInsetsController().setSystemBarsAppearance(WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS, WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS);
 //            // 抬高底部方式二：
-//            // 貌似这样也能获取导航栏高度
+//            // 貌似这样也能获取导航栏高度。有时候获取不到，可能需要等onCreate调用完后才能获取到，或者放到别的线程队列中试试
 //            ViewCompat.getRootWindowInsets(window.getDecorView().findViewById(android.R.id.content)).getInsets(WindowInsetsCompat.Type.navigationBars()).bottom;
 //            // 获取导航栏高度
 //            int resourceId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
