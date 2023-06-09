@@ -41,6 +41,8 @@ public class TranslucentBarActivity extends AppCompatActivity {
 //            // 高亮显示状态栏，字体黑色
 //            window.getDecorView().getWindowInsetsController().setSystemBarsAppearance(WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS, WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS);
 //            // 抬高底部方式二：
+//            // 貌似这样也能获取导航栏高度
+//            ViewCompat.getRootWindowInsets(window.getDecorView().findViewById(android.R.id.content)).getInsets(WindowInsetsCompat.Type.navigationBars()).bottom;
 //            // 获取导航栏高度
 //            int resourceId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
 //            if (0 != resourceId) {
