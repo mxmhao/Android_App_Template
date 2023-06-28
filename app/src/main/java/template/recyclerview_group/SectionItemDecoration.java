@@ -83,7 +83,7 @@ public class SectionItemDecoration extends RecyclerView.ItemDecoration {
         mPaint.getTextBounds(title, 0, title.length(), mBounds);
 
         c.drawText(title, bgLeft,
-                bgBottom - (mTitleBgHeight/2 - mBounds.bottom/2),//y是baseline的位置，这里用文字的底部粗略当baseline
+                bgBottom - (mTitleBgHeight/2 - mBounds.height()/2),//y是baseline的位置，这里用文字的底部粗略当baseline
                 mPaint);
 //        Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();
 //        float distance = (fontMetrics.bottom - fontMetrics.top)/2 - fontMetrics.bottom;
