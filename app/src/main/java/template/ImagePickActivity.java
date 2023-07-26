@@ -38,6 +38,8 @@ public class ImagePickActivity extends AppCompatActivity {
             }
         });
         imagePickLauncher2.launch(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
+        // 这个应该是拍照，还有一些别的参数要设置，另外研究吧
+//        imagePickLauncher2.launch(new Intent(MediaStore.ACTION_IMAGE_CAPTURE));
 
         /*
         方式3：必须是API 33 (安卓13)，才能使用
