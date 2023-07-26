@@ -2,11 +2,12 @@ apply plugin: 'com.android.application'
 //https://developer.android.google.cn/studio/projects/android-library
 
 android {
-    compileSdkVersion 32
+    namespace 'test.mxm.android_app_template'
+    compileSdk 33
     defaultConfig {
         applicationId "test.mxm.android_app_template"
-        minSdkVersion 26
-        targetSdkVersion 32
+        minSdk 26
+        targetSdk 33
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -36,10 +37,10 @@ def generateTime() {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'androidx.appcompat:appcompat:1.4.0'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'com.google.android.material:material:1.7.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test:runner:1.4.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'

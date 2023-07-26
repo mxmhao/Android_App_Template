@@ -40,4 +40,5 @@
 28. [获取指定文件夹大小；UtilTemplates.java#getDirSize](/app/src/main/java/template/UtilTemplates.java)
 29. [获取存储可用空间大小；UtilTemplates.java#getAvailableSpace](/app/src/main/java/template/UtilTemplates.java)  
 30. [各种自建证书加载；UtilTemplates.java#getSSLSocketFactory](/app/src/main/java/template/UtilTemplates.java)  
-31. [自定义悬浮可拖动按钮；FloatDragBtnActivity.java](/app/src/main/java/template/FloatDragBtnActivity.java)
+31. [自定义悬浮可拖动按钮；FloatDragBtnActivity.java](/app/src/main/java/template/FloatDragBtnActivity.java)  
+32. [安卓自带图片选择器的正确打开方式；ImagePickActivity.java](/app/src/main/java/template/ImagePickActivity.java)
