@@ -74,5 +74,16 @@ public class ImagePickActivity extends AppCompatActivity {
 //                getContentResolver().openInputStream(result);
             }
         });*/
+
+        // 方式5: 此方式可以指定多个文件类型
+        ActivityResultLauncher<String[]> imagePickLauncher5 = registerForActivityResult(new ActivityResultContracts.OpenDocument(), new ActivityResultCallback<Uri>() {
+            @Override
+            public void onActivityResult(Uri result) {
+                // 这里拿到的是 图片的uri
+                // 这种方式读取数据是不需要 Manifest.permission.READ_EXTERNAL_STORAGE 权限
+//                getContentResolver().openInputStream(result);
+            }
+        });
+        imagePickLauncher5.launch(new String[]{"image/*", "video/*", ""});
     }
 }
