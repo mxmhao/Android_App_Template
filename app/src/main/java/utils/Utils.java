@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.webkit.MimeTypeMap;
 
 import java.lang.reflect.Method;
@@ -211,5 +212,14 @@ public class Utils {
             Log.e("Utils", "getProp: ", e);
         }
         return defaultValue;
+    }
+
+    /**
+     * 判断activity是否正在显示
+     * @param activity Activity
+     * @return true：正在显示
+     */
+    public static boolean activityVisible(Activity activity) {
+        return activity.getWindow().getDecorView().getVisibility() == View.VISIBLE;
     }
 }
