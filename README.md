@@ -45,4 +45,4 @@
 
 
 ## 要了解学习的事物
-1. 并发锁：ReentrantLock CountDownLatch CyclicBarrier Phaser ReadWriteLock StampedLock Semaphore Exchanger、LockSupport Condition
+1. 并发：ReentrantLock CountDownLatch CyclicBarrier Phaser ReadWriteLock StampedLock Semaphore Exchanger、LockSupport Condition
