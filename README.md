@@ -42,3 +42,7 @@
 30. [各种自建证书加载；UtilTemplates.java#getSSLSocketFactory](/app/src/main/java/template/UtilTemplates.java)  
 31. [自定义悬浮可拖动按钮；FloatDragBtnActivity.java](/app/src/main/java/template/FloatDragBtnActivity.java)  
 32. [安卓自带图片选择器的正确打开方式；ImagePickActivity.java](/app/src/main/java/template/ImagePickActivity.java)
+
+
+## 要了解学习的事物
+1. 并发锁：ReentrantLock CountDownLatch CyclicBarrier Phaser ReadWriteLock StampedLock Semaphore Exchanger、LockSupport Condition
