@@ -12,8 +12,12 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.StatFs;
 import android.speech.tts.TextToSpeech;
+import android.text.Editable;
+import android.text.InputType;
 import android.text.format.Formatter;
+import android.text.method.DigitsKeyListener;
 import android.util.Log;
+import android.widget.EditText;
 
 import androidx.annotation.StringRes;
 
@@ -356,5 +360,94 @@ public class UtilTemplates {
         try {
             closeable.close();
         } catch (IOException ignored) {}
+    }
+
+    /**
+     * EditText 输入限制
+     */
+    private static void editTextLimiter(Context context) {
+        EditText et = new EditText(context);
+
+        et.setInputType(InputType.TYPE_CLASS_NUMBER);
+        // 限制范围 0 ~ 65535
+        et.addTextChangedListener(new TextWatcherAdapter() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() > 0 && Integer.parseInt(s.toString()) > 65535) {
+                    s.delete(4, 5);
+                }
+            }
+        });
+        // 限制输入1 ~ 100
+        et.addTextChangedListener(new TextWatcherAdapter() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                int len = s.length();
+                int num;
+                if (len > 0 && ((num = Integer.parseInt(s.toString())) > 100 || num < 1)) {
+                    s.delete(len - 1, len);
+                }
+            }
+        });
+
+        // 设置只能输入数字和小数点，且会限制软键盘的类型
+        et.setInputType((InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_CLASS_NUMBER));
+        // 限制输入0 ~ 90，只能输入一个小数点，保留两位小数
+        et.addTextChangedListener(new TextWatcherAdapter() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                String num = s.toString();
+                final int point = num.indexOf('.');
+                final int len = s.length();
+                // 保留2位小数
+                if ((0 == point && 1 == len) || (-1 != point && len - 1 - point > 2) || (len > 0 && Float.parseFloat(num) > 90)) {
+                    s.delete(len - 1, len);
+                }
+            }
+        });
+
+        // 设置只能输入数字、小数点、正负号，且会限制软键盘的类型
+        et.setInputType((InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED));
+        // 限制输入，只能输入一个小数点，保留两位小数
+        et.addTextChangedListener(new TextWatcherAdapter() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                final int len = s.length();
+                if (0 == len) return;
+
+                String string = s.toString();
+                if (1 == len && ("-".equals(string) || "+".equals(string))) return;
+
+                final int point = string.indexOf('.');
+                float num;
+                // 保留2为小数点
+                if ((0 == point && 1 == len) || (-1 != point && len - 1 - point > 2) || ((num = Float.parseFloat(string)) > 3.40E+38f || num < -(3.40E+38f))) {
+                    s.delete(len - 1, len);
+                }
+            }
+        });
+
+        // 限制字符只能输入数字、正负号
+        et.setInputType((InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED));
+
+        // 限制字符只能输入 1234567890ABCDEFabcdef 中的字符------------
+        et.setInputType(InputType.TYPE_CLASS_TEXT);
+        // android:digits="1234567890ABCDEFabcdef" 的代码写法：
+        et.setKeyListener(DigitsKeyListener.getInstance("1234567890ABCDEFabcdef"));
+        // -------------------------------------------------------
+
+        // 集中焦点，才有键盘弹出
+        et.setFocusable(true);
+        et.setFocusableInTouchMode(true);
+        et.requestFocus();
+
+        // 如果你的输入框在 Dialog 上，用这个才能有软键盘弹出
+//        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        // 如果上面的代码没有弹出软键盘 可以使用下面另一种方式
+//        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+//        imm.showSoftInput(etTime, 0);
+
+        // 防止 Dialog 键盘弹起时底部布局被顶起，可以放在 onCreate 调用
+//        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
     }
 }
