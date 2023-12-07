@@ -34,15 +34,15 @@
 22. [最简、最省存储的启动页设置；R.style.LauncherTheme](/app/src/main/res/values/styles.xml)
 23. [获取WiFi列表，获取当前链接的WiFi名称，API>=29连接WiFi，扫描WiFi和蓝牙等外设的建议；WiFiActivity.java](/app/src/main/java/template/WiFiActivity.java)
 24. [图片创建缩略图；ThumbnailImage.java#createThumbImage](/app/src/main/java/template/ThumbnailImage.java)
-25. [文字转语音(TTS)；UtilTemplates.java#speak](/app/src/main/java/template/UtilTemplates.java)
-26. [获取对应 density 下的原图；UtilTemplates.java#getNoScaledImage](/app/src/main/java/template/UtilTemplates.java)
-27. [获取剪切板的内容；UtilTemplates.java#getClipboardText](/app/src/main/java/template/UtilTemplates.java)
-28. [获取指定文件夹大小；UtilTemplates.java#getDirSize](/app/src/main/java/template/UtilTemplates.java)
-29. [获取存储可用空间大小；UtilTemplates.java#getAvailableSpace](/app/src/main/java/template/UtilTemplates.java)  
-30. [各种自建证书加载；UtilTemplates.java#getSSLSocketFactory](/app/src/main/java/template/UtilTemplates.java)  
+25. [文字转语音(TTS)；UtilTemplates.java#speak](/app/src/main/java/template/UtilTemplates.java#L57)
+26. [获取对应 density 下的原图；UtilTemplates.java#getNoScaledImage](/app/src/main/java/template/UtilTemplates.java#L95)
+27. [获取剪切板的内容；UtilTemplates.java#getClipboardText](/app/src/main/java/template/UtilTemplates.java#L104)
+28. [获取指定文件夹大小；UtilTemplates.java#getDirSize](/app/src/main/java/template/UtilTemplates.java#L128)
+29. [获取存储可用空间大小；UtilTemplates.java#getAvailableSpace](/app/src/main/java/template/UtilTemplates.java#L153)  
+30. [各种自建证书加载；UtilTemplates.java#getSSLSocketFactory](/app/src/main/java/template/UtilTemplates.java#L238)  
 31. [自定义悬浮可拖动按钮；FloatDragBtnActivity.java](/app/src/main/java/template/FloatDragBtnActivity.java)  
 32. [安卓自带图片选择器的正确打开方式；ImagePickActivity.java](/app/src/main/java/template/ImagePickActivity.java)  
-33. [EditText输入限制；UtilTemplates.java#editTextLimiter](/app/src/main/java/template/UtilTemplates.java)
+33. [EditText输入限制；UtilTemplates.java#editTextLimiter](/app/src/main/java/template/UtilTemplates.java#L368)
 
 
 ## 要了解学习的事物
