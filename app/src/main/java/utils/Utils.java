@@ -4,8 +4,11 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
@@ -20,6 +23,8 @@ import java.lang.reflect.Method;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class Utils {
@@ -104,6 +109,73 @@ public class Utils {
         intent.putExtra(Intent.EXTRA_SUBJECT, title);//添加标题
         intent.putExtra(Intent.EXTRA_TEXT, message);//添加分享内容
         activity.startActivity(intent);
+
+        /*
+        下面的 searchCanShareApps 方法可以获取包名
+            常见应用包名
+            微信朋友圈
+            “com.tencent.mm”
+            “com.tencent.mm.ui.tools.ShareToTimeLineUI”
+
+            微信朋友
+            “com.tencent.mm”
+            “com.tencent.mm.ui.tools.ShareImgUI”
+
+            QQ好友
+            “com.tencent.mobileqq”
+            “com.tencent.mobileqq.activity.JumpActivity”
+
+            QQ空间分享视频
+            “com.qzone”
+            “com.qzonex.module.maxvideo.activity.QzonePublishVideoActivity”
+
+            QQ空间分享图片、文字
+            “com.qzone”
+            “com.qzonex.module.operation.ui.QZonePublishMoodActivity”
+
+            新浪微博
+            “com.sina.weibo”
+            “com.sina.weibo.composerinde.ComposerDispatchActivity”
+         */
+//        ComponentName comp = new ComponentName("com.sina.weibo", "com.sina.weibo.composerinde.ComposerDispatchActivity");
+
+        intent.setAction(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_TEXT, "https://www.baidu.com");
+        intent.setType("text/plain");
+        // 直接跳到对应的app
+//            intent.setComponent(comp);
+//            startActivity(intent);
+        // 弹出一个选择器，
+        activity.startActivity(Intent.createChooser(intent, "分享链接"));
+    }
+
+    // 获取可分享的列表
+    public List<AppInfo> searchCanShareApps(Context context) {
+        PackageManager packageManager = context.getPackageManager();
+        List<AppInfo> appInfos = new ArrayList<>();
+        List<ResolveInfo> resolveInfos;
+        Intent intent = new Intent(Intent.ACTION_SEND, null);
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        intent.setType("*/*");
+        resolveInfos = context.getPackageManager().queryIntentActivities(intent, PackageManager.COMPONENT_ENABLED_STATE_DEFAULT);
+        AppInfo info;
+        ResolveInfo resolveInfo;
+        for (int i = 0, size = resolveInfos.size(); i < size; i++) {
+            info = new AppInfo();
+            resolveInfo = resolveInfos.get(i);
+            info.appName = resolveInfo.loadLabel(packageManager).toString();
+            info.icon = resolveInfo.loadIcon(packageManager);
+            info.packageName = resolveInfo.activityInfo.packageName;
+            info.activityName = resolveInfo.activityInfo.name;
+            appInfos.add(info);
+        }
+        return appInfos;
+    }
+    public static class AppInfo {
+        public Drawable icon;
+        public String appName;
+        public String packageName;
+        public String activityName;
     }
 
     /**
