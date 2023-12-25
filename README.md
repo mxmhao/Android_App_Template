@@ -1,5 +1,5 @@
 # Android_App_Template
-[国内链接Gitee](https://gitee.com/maoxm/Android_App_Template)
+[国内链接gitee](https://gitee.com/maoxm/Android_App_Template)
 安卓App工具类和模板代码，工具类一般可以直接使用，模板类主要用来参考，引入到自己的项目时可能会报错，请自行修改。  
 开发安卓前，请去了解 <font color='#ff0000'>Jetpack</font> 和 <font color='#ff0000'>Hilt</font>，能使你的开发方便很多。
 
