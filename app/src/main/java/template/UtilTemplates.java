@@ -453,7 +453,7 @@ public class UtilTemplates {
     }
 
     private static final int USER_ID_LENGTH = 16; // Id长度
-    // 用时间戳生成一种随机方id
+    // 用时间戳生成一种随机id
     public static String getTimestampRandomId() {
         Random random = new Random();
         // 从2020 年 1 月 1 日 00:00:00 开始的时间戳。与iOS端一致
