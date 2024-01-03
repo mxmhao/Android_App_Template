@@ -34,6 +34,7 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.util.Locale;
+import java.util.Random;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
@@ -449,5 +450,19 @@ public class UtilTemplates {
 
         // 防止 Dialog 键盘弹起时底部布局被顶起，可以放在 onCreate 调用
 //        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
+    }
+
+    private static final int USER_ID_LENGTH = 16; // Id长度
+    // 用时间戳生成一种随机方id
+    public static String getTimestampRandomId() {
+        Random random = new Random();
+        // 从2020 年 1 月 1 日 00:00:00 开始的时间戳。与iOS端一致
+        StringBuilder sb = new StringBuilder((System.currentTimeMillis() - 1577836800000L) + (random.nextInt() % 2 == 0 ? "A" : "a"));
+        for (int i = 0, len = USER_ID_LENGTH - sb.length(); i < len; i++) {
+            sb.insert(random.nextInt(sb.length() - 1), (char) ((random.nextInt() % 2 == 0 ? 'A' : 'a') + random.nextInt(26)));
+        }
+
+        // 以‘a’或‘A’ 结尾表示安卓端。
+        return sb.toString();
     }
 }

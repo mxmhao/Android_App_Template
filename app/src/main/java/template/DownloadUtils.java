@@ -1,5 +1,6 @@
 package template;
 
+import android.annotation.SuppressLint;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -73,6 +74,7 @@ public class DownloadUtils {
         @Override
         public void onReceive(Context context, Intent intent) {
             checkStatus();
+            long downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0);
         }
     };
 
@@ -101,6 +103,7 @@ public class DownloadUtils {
         }
     }
 
+    @SuppressLint("Range")
     public int getStatus() {
         int status = 0;
         DownloadManager.Query query = new DownloadManager.Query();

@@ -34,7 +34,7 @@ public class Utils {
     public static String getMIME(String path) {
         //方式一：
         //不建议使用getFileExtensionFromUrl方法，它总是返回空，应该是google的问题
-        String extension = MimeTypeMap.getFileExtensionFromUrl(path).toLowerCase();
+        String extension = MimeTypeMap.getFileExtensionFromUrl(path);
         //这个还是可以用的
         String mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
 
