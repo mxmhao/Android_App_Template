@@ -3,6 +3,8 @@ package template;
 import android.annotation.SuppressLint;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -148,4 +150,36 @@ public class DownloadUtils {
             }
         }
     }*/
+
+    // 这个几个常量值在AOSP能找到 https://github.com/aosp-mirror/platform_frameworks_base/blob/master/core/java/android/provider/Downloads.java
+    private static final String CONTENT_URI = "content://downloads/my_downloads";
+    private static final int CONTROL_RUN = 0;
+    private static final int CONTROL_PAUSED = 1;
+    private static boolean resumeDownload(Context context, long id) {
+        return controlDownload(context, id, CONTROL_RUN);
+    }
+
+    private static boolean pauseDownload(Context context, long id) {
+        return controlDownload(context, id, CONTROL_PAUSED);
+    }
+
+    private static boolean controlDownload(Context context, long id, int control) {
+        int updatedRows = 0;
+        ContentValues controls = new ContentValues();
+        // 以下写法可参考 DownloadManager.forceDownload() 方法 和 https://github.com/aosp-mirror/platform_frameworks_base/blob/master/core/java/android/provider/Downloads.java
+        controls.put("control", control); // Resume Control Value
+//        controls.put(DownloadManager.COLUMN_STATUS, 190); // 190: STATUS_PENDING
+        try {
+            updatedRows = context.getContentResolver().update(
+//                    Uri.parse(CONTENT_URI),
+//                    controls,
+//                    DownloadManager.COLUMN_ID + "=?",
+//                    new String[]{ String.valueOf(id) }
+                    ContentUris.withAppendedId(Uri.parse(CONTENT_URI), id),
+                    controls, null, null
+            );
+        } catch (Exception ignored) {}
+
+        return updatedRows > 0;
+    }
 }
