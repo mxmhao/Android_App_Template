@@ -8,7 +8,9 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.media.MediaMetadataRetriever;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
@@ -19,11 +21,15 @@ import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 
@@ -293,5 +299,46 @@ public class Utils {
      */
     public static boolean activityVisible(Activity activity) {
         return activity.getWindow().getDecorView().getVisibility() == View.VISIBLE;
+    }
+
+    /**
+     * 获取视频文件的第一帧
+     * @param url 视频的链接，远程或本地都可
+     * @param saveTo 保存地址
+     */
+    public static void createVideoThumbnail(String url, String saveTo) {
+        File file = new File(saveTo);
+        if (file.exists()) {
+            file.delete();
+        }
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        if (url.startsWith("http") || url.startsWith("https")) {
+            retriever.setDataSource(url, new Hashtable<>());
+        } else {
+            retriever.setDataSource(url);
+        }
+        Bitmap bmp = retriever.getFrameAtTime(0, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
+        if (null != bmp) {
+            try (FileOutputStream fos = new FileOutputStream(file)) {
+                bmp.compress(Bitmap.CompressFormat.JPEG, 90, fos);
+                fos.flush();
+            } catch (IOException e) {
+            }
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            try {
+                retriever.close();
+            } catch (IOException ignored) {}
+        }
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+//            Size mSize = new Size(96,96);
+//            CancellationSignal ca = new CancellationSignal();
+//            try {
+//                // 此方式只能获取到最大关键帧，无法获取第一帧
+//                Bitmap bitmapThumbnail = ThumbnailUtils.createVideoThumbnail(new File(filePath), mSize, ca);
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
     }
 }

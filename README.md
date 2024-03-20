@@ -8,7 +8,8 @@
 2. [Utils工具；Utils.java](/app/src/main/java/utils/Utils.java)
     包含：获取MIME类型、判断字符串是否为IP地址（模板）、分享到第三方（不用集成第三方SDK）、WiFi连接判断、获取其他语言的字符串、HarmonyOS判断、HarmonyOS系统版本号获取、判断activity是否正在显示  
 3. [AES加解密，字节数组与16进制字符串互转；aes/](/app/src/main/java/utils/encryption/aes)、[Android 加密工具](https://developer.android.google.cn/guide/topics/security/cryptography)、[Android 密钥库系统](https://developer.android.google.cn/training/articles/keystore)
-4. [App启动icon不显示在 Launcher 上的方法：在启动 Activity 的 intent-filter 中加点料](/app/src/main/AndroidManifest.xml)
+4. [App启动icon不显示在 Launcher 上的方法：在启动 Activity 的 intent-filter 中加点料](/app/src/main/AndroidManifest.xml)  
+5. [获取视频文件的第一帧，远程或本地视频都可](/app/src/main/java/utils/Utils.java#L309)
 
 ## [模板，在“/app/src/main/java/template/”目录下](/app/src/main/java/template)
 1. [RecyclerView分组的模板代码；recyclerview_group/](/app/src/main/java/template/recyclerview_group)
