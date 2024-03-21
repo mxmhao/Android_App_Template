@@ -47,5 +47,5 @@
 33. [EditText输入限制；UtilTemplates.java#editTextLimiter](/app/src/main/java/template/UtilTemplates.java#L368)
 
 
-## 要了解学习的事物
+## 长见识（自己去搜，去了解，去使用）
 1. 并发：ReentrantLock CountDownLatch CyclicBarrier Phaser ReadWriteLock StampedLock Semaphore Exchanger LockSupport Condition
