@@ -89,9 +89,12 @@ public class TranslucentBarActivity extends AppCompatActivity {
         }*/
 
         /**
-         * 当使用 android:windowBackground 作为启动页时，此ImageView适合添加到DecorView中，人眼看不出切换差异
-         * 但使用 android:windowSplashscreenContent 做启动页时，不要加入到DecorView，会有一个底部导航栏的差异
-         * 可以加入到 android.R.id.content 的view中，不会有底部导航栏的差异，人眼看不出切换差异
+         * android:windowBackground 和 android:windowSplashscreenContent 对图片的拉伸效果不一样
+         * 当使用 android:windowBackground 作为启动页时，此ImageView适合添加到DecorView中，人眼看不出切换差异，适合全屏大图。
+         * 但使用 android:windowSplashscreenContent 做启动页时，不要加入到DecorView，会有一个底部导航栏的差异，
+         * 可以加入到 android.R.id.content 的view中，不会有底部导航栏的差异，人眼看不出切换差异，适合非全屏的小图
+         * android:windowSplashscreenContent 与 android:windowBackground 不能同时存在，否则 以 android:windowSplashscreenContent
+         * 为主
          */
         ImageView iv = new ImageView(this);
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
