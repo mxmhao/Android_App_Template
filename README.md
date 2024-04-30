@@ -50,4 +50,4 @@
 
 ## 长见识（自己去搜，去了解，去使用）
 1. 并发：ReentrantLock CountDownLatch CyclicBarrier Phaser ReadWriteLock StampedLock Semaphore Exchanger LockSupport Condition  
-2. App内部角标 BadgeDrawable
+2. App内部角标 BadgeDrawable；MediaSession 框架
