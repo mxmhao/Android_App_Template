@@ -193,6 +193,27 @@ public class AES {
     // 向量
     private static final byte[] IV = new byte[]{8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 7, 6, 5};
 
+    /*
+    PKCS5Padding
+    PKCS7Padding
+    NoPadding
+    ZerosPadding
+    ISO10126Padding
+
+    总结一下，就是用了 NoPadding 就代表着你对这个数据是否可以被完整分组负有责任，如果不能被完整分组就会报错或者抛出异常。
+
+    然后 ZerosPadding 意思就是在数据块末尾补0x00，注意如果刚开始已经完整分组了也需要补一整个分组的0x00，否则无法解密。
+
+    PKCS7Padding 就是数据个数最后少几个就填充多少个数，具体的做法可以：数据的个数先取余16，然后16减去余数。
+    例如{1,2,3,4,5,6,7,8,9}，总共9个数值，取余16后是9，需要补充7个7，则最后数据变为{1,2,3,4,5,6,7,8,9,7,7,7,7,7,7,7}
+
+    PKCS5Padding，PKCS7Padding的子集，块大小固定为8字节。在AES加密当中其实是没有pkcs5的，
+    因为AES的分块是16B而pkcs5只能用于8B，所以我们在AES加密中所说的pkcs5指的就是pkcs7。
+
+    由于使用 PKCS7Padding/PKCS5Padding 填充时，最后一个字节肯定为填充数据的长度，所以在解密后可以准确删除填充的数据，
+    而使用 ZeroPadding 填充时，没办法区分真实数据与填充数据，所以只适合以\0结尾的字符串加解密。
+    为了改善这种不足，ISO10126Padding 采用不足的n-1位补随机数，最后一位补n的做法。
+    */
     /**
      * AES加密
      * @param data 要加密的数据
