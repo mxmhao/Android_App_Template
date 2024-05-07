@@ -45,6 +45,7 @@ public class AES {
      * @param secretKey 密钥
      * @param type     加密：{@link Cipher#ENCRYPT_MODE}，解密：{@link Cipher#DECRYPT_MODE}
      * @return 加密/解密结果字符串
+     * @deprecated 方法已过时，不要使用了
      */
     @SuppressLint({"DeletedProvider", "GetInstance"})
     public static String des(String content, String secretKey, @AESType int type) {
