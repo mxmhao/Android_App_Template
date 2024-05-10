@@ -14,6 +14,7 @@ extra.notify_effect: "2" // 通知栏点击后打开app的任一Activity
 extra.intent_uri : "intent:#Intent;action=min.test.myaction;component=min.test/min.test.TestActivity;S.key1=value;i.key2=2;S.key3={\"messageNo\":null,\"title\":\"您的订单已取消\"};end"
 extra.channel_id : // 与无限制推送有关
 无限制推送: 申请消息分类，得到的 channel_id 填到 extra.channel_id 字段
+推送角标由系统控制
 
 OPPO
 无测试字段：貌似可以先在推送运营后台（配置管理中）添加测试设备，然后被添加的设备貌似就可以无限制推送了（未验证）
@@ -22,14 +23,14 @@ click_action_activity: "min.test.TestActivity"
 action_parameters: "{\"messageNo\":null,\"title\":\"您的订单已取消\"}"
 channel_id ：// 与无限制推送有关
 无限制推送: 申请私信通道权限，要发邮件，通过后要在平台上登记
-
+推送无角标设置
 
 vivo
 pushMode: 1 // 先在推送运营后台添加测试设备，否则无效；推送模式 0：正式推送；1：测试推送，不填默认0；
 category: // 消息分类，与无限制推送有关
 skipType: 4 // 打开app内指定页面
 skipContent: "intent:#Intent;action=min.test.myaction;component=min.test/min.test.TestActivity;S.key1=value;i.key2=2;S.key3={\"messageNo\":null,\"title\":\"您的订单已取消\"};end"
-addBadge: true // 角标
+addBadge: true // 角标，只有几种类型的消息的推送可以设置角标，具体请看文档：桌面角标消息类型规范
 clientCustomMap: // 看文档，也许有用
 channel_id: // 目前无此参数
 无限制推送: 提工单开通
@@ -64,7 +65,7 @@ channel_id: // 目前无此参数
 
 FCM
 data: json object   // 传参
-click_action: "min.test.TestActivity" // 可以是 Activity 全名，也可以是 action name
+click_action: "min.test.TestActivity" // 可以是 Activity 全名（貌似这种方式无效），也可以是 action name
 color: "#FF0000" // 通知的图标颜色，以#rrggbb 格式表示。如果app内部没有默认值，最好填一个
 notification_count: 1 // 角标，不填置默认+1
 channel_id: 
