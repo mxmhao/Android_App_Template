@@ -35,7 +35,7 @@ pushMode: 1 // 先在推送运营后台添加测试设备，否则无效；推�
 category: // 消息分类，与无限制推送有关
 skipType: 4 // 打开app内指定页面
 skipContent: "intent:#Intent;action=min.test.myaction;component=min.test/min.test.TestActivity;S.key1=value;i.key2=2;S.key3={\"messageNo\":null,\"title\":\"您的订单已取消\"};end"
-addBadge: true // 角标，只有几种类型的消息的推送可以设置角标，具体请看文档：桌面角标消息类型规范
+addBadge: true // 角标，大部分类型的App还未开放，具体看文档或找客服问
 clientCustomMap: // 看文档，也许有用
 channel_id: // 目前无此参数
 tag: // 目前无此参数
