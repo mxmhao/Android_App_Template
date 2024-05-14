@@ -52,3 +52,4 @@
 1. 并发：ReentrantLock CountDownLatch CyclicBarrier Phaser ReadWriteLock StampedLock Semaphore Exchanger LockSupport Condition  
 2. App内部角标 BadgeDrawable；MediaSession 框架
 3. AndroidUtilCode 非常好的工具类，有些功能不知道怎么实现可以参考，Github上能搜到
+4. WifiManager.WifiLock 的 WIFI_MODE_FULL_HIGH_PERF 模式可以防止WiFi在息屏时休眠
