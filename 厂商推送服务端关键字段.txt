@@ -24,7 +24,7 @@ notify_id: // 标识符
 
 OPPO
 无测试字段：貌似可以先在推送运营后台（配置管理中）添加测试设备，然后被添加的设备貌似就可以无限制推送了（未验证）
-click_action_type: 4 // 跳转指定应用内页（全路径类名）
+click_action_type: 4 // 跳转指定应用内页（全路径类名）; 5：跳转Intent scheme URL，要加字段 click_action_url: "intent:#Intent;action=min.test.myaction;component=min.test/min.test.TestActivity;S.key1=value;i.key2=2;S.key3={\"messageNo\":null,\"title\":\"您的订单已取消\"};end"
 click_action_activity: "min.test.TestActivity"
 action_parameters: "{\"messageNo\":null,\"title\":\"您的订单已取消\"}"
 channel_id ：// 与无限制推送有关
