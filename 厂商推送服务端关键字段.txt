@@ -7,10 +7,13 @@
     "i."：代表参数值是 int 格式。
 3、厂商推送对消息有数量限制，默认只有1~2条，想无限制推送，需要去厂商申请消息分类
 4、有些厂商提供了测试模式，测试模式可以推送多条
-5、tag 和 notify id 一般用于通知栏的覆盖，用不到可以不填
+5、tag 和 notify id 一般用于通知栏的覆盖或者撤回，用不到可以不填
+6、被跳转的 Activity 必须设置 android:exported="true" 和 <category android:name="android.intent.category.DEFAULT" />，某些厂商得这么设置，否则无法打开Activity
+7、一定要防止 Activity 类名打包时被混淆
 
 小米
 无测试字段：
+restricted_package_name: App的包名，根据需要填。小米的一个AppID可以设置多个包名，此字段在这种情况下就有用了
 extra.notify_effect: "2" // 通知栏点击后打开app的任一Activity
 extra.intent_uri : "intent:#Intent;action=min.test.myaction;component=min.test/min.test.TestActivity;S.key1=value;i.key2=2;S.key3={\"messageNo\":null,\"title\":\"您的订单已取消\"};end"
 extra.channel_id : // 与无限制推送有关
@@ -75,6 +78,7 @@ notifyId: // 标识符
 无限制推送: 目前参考 importance
 
 FCM
+restricted_package_name: App的包名。根据需要填。注册令牌必须匹配的应用程序的包名称才能接收消息。
 data: json object   // 传参
 click_action: "min.test.TestActivity" // 可以是 Activity 全名（貌似这种方式无效），也可以是 action name
 color: "#FF0000" // 通知的图标颜色，以#rrggbb 格式表示。如果app内部没有默认值，最好填一个
