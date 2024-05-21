@@ -350,6 +350,7 @@ public class Utils {
         final String googlePlayStorePackage = "com.android.vending";
         Intent intent = new Intent(Intent.ACTION_MAIN).setPackage(googlePlayStorePackage);
         List<ResolveInfo> list = context.getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+//        list = context.getPackageManager().queryIntentActivities(intent, PackageManager.ResolveInfoFlags.of(PackageManager.MATCH_DEFAULT_ONLY));// API 33 起用这个
         for (ResolveInfo info : list) {
             if (info.activityInfo.name.startsWith(googlePlayStorePackage)) {
                 return true;
