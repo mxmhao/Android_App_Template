@@ -10,6 +10,7 @@
 3. [AES加解密，字节数组与16进制字符串互转；aes/](/app/src/main/java/utils/encryption/aes)、[Android 加密工具](https://developer.android.google.cn/guide/topics/security/cryptography)、[Android 密钥库系统](https://developer.android.google.cn/training/articles/keystore)
 4. [App启动icon不显示在 Launcher 上的方法：在启动 Activity 的 intent-filter 中加点料](/app/src/main/AndroidManifest.xml)  
 5. [获取视频文件的第一帧，远程或本地视频都可](/app/src/main/java/utils/Utils.java#L309)
+6. [判断谷歌Play商店是否安装](/app/src/main/java/utils/Utils.java#L349)
 
 ## [模板，在“/app/src/main/java/template/”目录下](/app/src/main/java/template)
 1. [RecyclerView分组的模板代码；recyclerview_group/](/app/src/main/java/template/recyclerview_group)

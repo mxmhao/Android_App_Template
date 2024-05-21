@@ -341,4 +341,20 @@ public class Utils {
 //            }
 //        }
     }
+
+    /**
+     * 判断 Google Play Store 是否已安装
+     * 注意AndroidManifest要添加：<queries>
+     */
+    public static boolean hasGooglePlayStore(Context context) {
+        final String googlePlayStorePackage = "com.android.vending";
+        Intent intent = new Intent(Intent.ACTION_MAIN).setPackage(googlePlayStorePackage);
+        List<ResolveInfo> list = context.getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+        for (ResolveInfo info : list) {
+            if (info.activityInfo.name.startsWith(googlePlayStorePackage)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
