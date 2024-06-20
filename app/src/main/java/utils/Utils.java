@@ -12,6 +12,8 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
 import android.net.ConnectivityManager;
+import android.net.EthernetNetworkSpecifier;
+import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -190,9 +192,14 @@ public class Utils {
      */
     public static boolean isWiFiConnected(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return cm.getNetworkCapabilities(cm.getActiveNetwork())
-                    .hasTransport(NetworkCapabilities.TRANSPORT_WIFI);//Wi-Fi
+        if (null == cm) return false;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Network network = cm.getActiveNetwork();
+            if (null == network) return false;
+
+            NetworkCapabilities capabilities = cm.getNetworkCapabilities(network);
+            return null != capabilities && capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) && capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED);//Wi-Fi
 //            NetworkCapabilities.TRANSPORT_CELLULAR//蜂窝网络，2/3/4/5G
         }
 
