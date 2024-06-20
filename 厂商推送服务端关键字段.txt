@@ -9,7 +9,7 @@
 4、有些厂商提供了测试模式，测试模式可以推送多条
 5、tag 和 notify id 一般用于通知栏的覆盖或者撤回，用不到可以不填
 6、被跳转的 Activity 必须设置 android:exported="true" 和 <category android:name="android.intent.category.DEFAULT" />，某些厂商得这么设置，否则无法打开Activity
-7、一定要防止 Activity 类名打包时被混淆
+7、一定要防止 Activity 类名打包时被混淆，否则intent里的Activity就对不上了
 
 小米
 无测试字段：
@@ -47,7 +47,7 @@ notifyId: // 标识符
 
 华为
 target_user_type: 1 // 1：测试消息；0：普通消息；不填默认0；每个应用每日可发送该测试消息500条且不受每日单设备推送数量上限要求
-category: // 消息分类，与无限制推送有关
+category: // 消息分类，与无限制推送有关，自分类权益 开通哪个填哪个
 click_action: {
     type: 3, // 打开应用自定义页面
     intent: "intent:#Intent;action=min.test.myaction;component=min.test/min.test.TestActivity;S.key1=value;i.key2=2;S.key3={\"messageNo\":null,\"title\":\"您的订单已取消\"};end"
