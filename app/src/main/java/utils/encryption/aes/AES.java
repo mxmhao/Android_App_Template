@@ -194,6 +194,8 @@ public class AES {
     private static final byte[] IV = new byte[]{8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 7, 6, 5};
 
     /*
+    单片机参考： https://blog.csdn.net/chengjunchengjun/article/details/109322987
+
     PKCS5Padding
     PKCS7Padding
     NoPadding
