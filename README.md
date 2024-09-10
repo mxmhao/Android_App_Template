@@ -47,6 +47,7 @@
 32. [安卓自带图片选择器的正确打开方式；ImagePickActivity.java](/app/src/main/java/template/ImagePickActivity.java)  
 33. [EditText输入限制；UtilTemplates.java#editTextLimiter](/app/src/main/java/template/UtilTemplates.java#L368)  
 34. [把本地 aar 文件发布到本地 maven 源，可以像远程 maven 库一样引入](/app/build.gradle#L64)
+35. [keystore文件的指纹计算方法](/app/src/main/java/template/FingerprintUtils.java)
 
 
 ## 长见识（自己去搜，去了解，去使用）
