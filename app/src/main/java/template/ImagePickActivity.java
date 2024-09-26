@@ -8,10 +8,23 @@ import android.provider.MediaStore;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.List;
+
 public class ImagePickActivity extends AppCompatActivity {
+
+    // registerForActivityResult 可以在构造的时候调用
+    private ActivityResultLauncher<String> lip = registerForActivityResult(new ActivityResultContracts.GetContent(), new ActivityResultCallback<Uri>() {
+        @Override
+        public void onActivityResult(Uri result) {
+            // 这里拿到的是 图片的uri
+            // 这种方式读取数据是不需要 Manifest.permission.READ_EXTERNAL_STORAGE 权限
+//                getContentResolver().openInputStream(result);
+        }
+    });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +71,7 @@ public class ImagePickActivity extends AppCompatActivity {
 
         /*
         方式4:
-        1.7.0 版或更高版本的 androidx.activity 库，这些库目前都是测试版本，不建议使用
+        搭载 Android 11（API 级别 30）或更高版本 1.7.0 版或更高版本的 androidx.activity 库
         https://developer.android.google.cn/training/data-storage/shared/photopicker?hl=zh-cn
         def activity_version = "1.7.0"
         // Java language implementation
@@ -66,14 +79,33 @@ public class ImagePickActivity extends AppCompatActivity {
         // Kotlin
         implementation "androidx.activity:activity-ktx:$activity_version"
          */
-        /*ActivityResultLauncher<PickVisualMediaRequest> imagePickLauncher4 = registerForActivityResult(new PickVisualMedia(), new ActivityResultCallback<Uri>() {
+        // 选择单个媒体文件
+        ActivityResultLauncher<PickVisualMediaRequest> imagePickLauncher4 = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), new ActivityResultCallback<Uri>() {
             @Override
             public void onActivityResult(Uri result) {
                 // 这里拿到的是 图片的uri
                 // 这种方式读取数据是不需要 Manifest.permission.READ_EXTERNAL_STORAGE 权限
 //                getContentResolver().openInputStream(result);
+                // 默认情况下，系统会授予应用对媒体文件的访问权限，直到设备重启或应用停止运行。如果您的应用执行长时间运行的工作（例如在后台上传大型文件），您可能需要将此访问权限保留更长时间。为此，请调用
+                getContentResolver().takePersistableUriPermission(result, Intent.FLAG_GRANT_READ_URI_PERMISSION);
             }
-        });*/
+        });
+        // 只视频
+//        new PickVisualMediaRequest.Builder().setMediaType(ActivityResultContracts.PickVisualMedia.VideoOnly.INSTANCE).build();
+        // 默认是图片和视频都包含
+        imagePickLauncher4.launch(new PickVisualMediaRequest.Builder().build());
+
+        // 选择多个媒体项，maxItems为最大可选数量。最大数量查询 MediaStore.getPickImagesMaxLimit()
+        ActivityResultLauncher<PickVisualMediaRequest> imagePickLauncher6 = registerForActivityResult(new ActivityResultContracts.PickMultipleVisualMedia(9), new ActivityResultCallback<List<Uri>>() {
+            @Override
+            public void onActivityResult(List<Uri> result) {
+                // 这里拿到的是 图片的uri
+                // 这种方式读取数据是不需要 Manifest.permission.READ_EXTERNAL_STORAGE 权限
+//                getContentResolver().openInputStream(result);
+            }
+        });
+
+        imagePickLauncher6.launch(new PickVisualMediaRequest.Builder().build());
 
         // 方式5: 此方式可以指定多个文件类型
         ActivityResultLauncher<String[]> imagePickLauncher5 = registerForActivityResult(new ActivityResultContracts.OpenDocument(), new ActivityResultCallback<Uri>() {
