@@ -55,5 +55,6 @@
 2. App内部角标 BadgeDrawable；MediaSession 框架
 3. AndroidUtilCode 非常好的工具类，有些功能不知道怎么实现可以参考，Github上能搜到
 4. WifiManager.WifiLock 的 WIFI_MODE_FULL_HIGH_PERF 模式可以防止WiFi在息屏时休眠
-5. HTTP上传文件的断点续传协议可参考(苹果公司写的)：https://datatracker.ietf.org/doc/draft-ietf-httpbis-resumable-upload/
-6. Android 官方性能监控和检测[https://developer.android.google.cn/topic/performance/inspecting-overview?hl=zh-cn](https://developer.android.google.cn/topic/performance/inspecting-overview?hl=zh-cn)
+5. HTTP上传文件的断点续传协议可参考(苹果公司为其NSURLSession上传文件定制的)：https://datatracker.ietf.org/doc/draft-ietf-httpbis-resumable-upload/
+6. Android 官方性能监控和检测，也介绍了要引入的库[https://developer.android.google.cn/topic/performance/inspecting-overview?hl=zh-cn](https://developer.android.google.cn/topic/performance/inspecting-overview?hl=zh-cn)
+7. 自定义指定 JDK Home 路径可以在项目根目录的[gradle.properties](gradle.properties)中添加 org.gradle.java.home 参数
