@@ -18,7 +18,7 @@
 3. [获取本地图片或视频的缩略图；ThumbnailImage.java](/app/src/main/java/template/ThumbnailImage.java)
 4. [安卓8.0官方BottomNavigationView使用的问题；BottomNavigationFragment.java](/app/src/main/java/template/BottomNavigationFragment.java)
 5. [Fragment的壳Activity，主要是想App就用这一个Activity就够了，其他的都用Fragment；fragment_activity/](/app/src/main/java/template/fragment_activity)
-6. [使用系统的文件多选，文件夹（目录）选择器；FileMultipleSelectionFragment.java](/app/src/main/java/template/FileMultipleSelectionFragment.java)
+6. [使用系统的文件多选，文件夹（目录）选择器；FileMultipleSelectionFragment.java，已过时，最新方法请参考第32条](/app/src/main/java/template/FileMultipleSelectionFragment.java)
 7. [自定义改造Toast；ToastUtils.java](/app/src/main/java/template/ToastUtils.java)
 8. [Okhttp3上传或者下载文件的模板；OkHttp3UploadDownload.java](/app/src/main/java/template/OkHttp3UploadDownload.java)
 9. [WebView常用设置，<input type='file'>文件选择适配；WebViewActivity.java](/app/src/main/java/template/WebViewActivity.java)
@@ -58,3 +58,5 @@
 5. HTTP上传文件的断点续传协议可参考(苹果公司为其NSURLSession上传文件定制的)：https://datatracker.ietf.org/doc/draft-ietf-httpbis-resumable-upload/
 6. Android 官方性能监控和检测，也介绍了要引入的库[https://developer.android.google.cn/topic/performance/inspecting-overview?hl=zh-cn](https://developer.android.google.cn/topic/performance/inspecting-overview?hl=zh-cn)
 7. 自定义指定 JDK Home 路径可以在项目根目录的[gradle.properties](gradle.properties)中添加 org.gradle.java.home 参数
+8. 第三方依赖下载加速，阿里云 Maven 仓库镜像介绍：[https://developer.aliyun.com/mvn/guide](https://developer.aliyun.com/mvn/guide)
+9. gradle 下载加速，腾讯云 gradle 下载地址，按需更新链接中的版本号即可：[https://mirrors.cloud.tencent.com/gradle/gradle-7.6.3-all.zip](https://mirrors.cloud.tencent.com/gradle/gradle-7.6.3-all.zip)

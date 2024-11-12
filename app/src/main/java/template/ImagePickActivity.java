@@ -20,11 +20,18 @@ public class ImagePickActivity extends AppCompatActivity {
     private ActivityResultLauncher<String> lip = registerForActivityResult(new ActivityResultContracts.GetContent(), new ActivityResultCallback<Uri>() {
         @Override
         public void onActivityResult(Uri result) {
-            // 这里拿到的是 图片的uri
+            // 这里拿到的是 文件的uri
             // 这种方式读取数据是不需要 Manifest.permission.READ_EXTERNAL_STORAGE 权限
 //                getContentResolver().openInputStream(result);
         }
     });
+
+    // 把文件写到沙盒之外时用的路径选择器，选择器中还可以编辑指定文件名。调用方法：fileExporter.launch("默认的文件名.json")
+    final ActivityResultLauncher<String> fileExporter = registerForActivityResult(
+            new ActivityResultContracts.CreateDocument("application/json"), uri -> {
+                if (uri != null) { // 返回文件完整路径
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
