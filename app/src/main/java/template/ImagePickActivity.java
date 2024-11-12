@@ -41,11 +41,12 @@ public class ImagePickActivity extends AppCompatActivity {
         ActivityResultLauncher<String> imagePickLauncher1 = registerForActivityResult(new ActivityResultContracts.GetContent(), new ActivityResultCallback<Uri>() {
             @Override
             public void onActivityResult(Uri result) {
-                // 这里拿到的是 图片的uri
+                // 这里拿到的是 文件的uri
                 // 这种方式读取数据是不需要 Manifest.permission.READ_EXTERNAL_STORAGE 权限
 //                getContentResolver().openInputStream(result);
             }
         });
+        // 使用
         imagePickLauncher1.launch("image/*");
 
         // 方式2，这种方式会有图片选择器或文件选择器两种方式弹窗提供选择：
@@ -57,6 +58,7 @@ public class ImagePickActivity extends AppCompatActivity {
 //                getContentResolver().openInputStream(result.getData().getData());
             }
         });
+        // 使用
         imagePickLauncher2.launch(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
         // 这个应该是拍照，还有一些别的参数要设置，另外研究吧
 //        imagePickLauncher2.launch(new Intent(MediaStore.ACTION_IMAGE_CAPTURE));
@@ -70,6 +72,7 @@ public class ImagePickActivity extends AppCompatActivity {
             // 这种方式读取数据是不需要 Manifest.permission.READ_EXTERNAL_STORAGE 权限
 //                getContentResolver().openInputStream(result.getData().getData());
         });
+        // 使用
         Intent intent = new Intent(MediaStore.ACTION_PICK_IMAGES);
         // 默认图片视频都可选，这里可以自己过滤
         intent.setType("image/*");
@@ -97,6 +100,7 @@ public class ImagePickActivity extends AppCompatActivity {
                 getContentResolver().takePersistableUriPermission(result, Intent.FLAG_GRANT_READ_URI_PERMISSION);
             }
         });
+        // 使用
         // 只视频
 //        new PickVisualMediaRequest.Builder().setMediaType(ActivityResultContracts.PickVisualMedia.VideoOnly.INSTANCE).build();
         // 默认是图片和视频都包含
@@ -111,18 +115,30 @@ public class ImagePickActivity extends AppCompatActivity {
 //                getContentResolver().openInputStream(result);
             }
         });
-
+        // 使用
         imagePickLauncher6.launch(new PickVisualMediaRequest.Builder().build());
 
         // 方式5: 此方式可以指定多个文件类型
         ActivityResultLauncher<String[]> imagePickLauncher5 = registerForActivityResult(new ActivityResultContracts.OpenDocument(), new ActivityResultCallback<Uri>() {
             @Override
             public void onActivityResult(Uri result) {
-                // 这里拿到的是 图片的uri
+                // 这里拿到的是 文件的uri
                 // 这种方式读取数据是不需要 Manifest.permission.READ_EXTERNAL_STORAGE 权限
 //                getContentResolver().openInputStream(result);
             }
         });
+        // 使用
         imagePickLauncher5.launch(new String[]{"image/*", "video/*", ""});
+
+        // 方式6: 选择多个文件
+        ActivityResultLauncher<String[]> imagePickLauncher7 = registerForActivityResult(new ActivityResultContracts.OpenMultipleDocuments(), new ActivityResultCallback<List<Uri>>() {
+            @Override
+            public void onActivityResult(List<Uri> list) {
+            }
+        });
+        // 使用
+        imagePickLauncher7.launch(new String[]{"image/*", "video/*", ""});
+
+        // 还有很多好用的可以自己去发觉
     }
 }
