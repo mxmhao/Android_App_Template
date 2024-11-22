@@ -94,8 +94,12 @@ public class OkHttp3UploadDownload {
         //无法识别的文件用"application/octet-stream"
 //        RequestBody byteBody = RequestBody.create(MediaType.parse("application/octet-stream"), new byte[23]);
 //        RequestBody fileBody = RequestBody.create(MediaType.parse(mime), new File(filePath));
-        RequestBody byteBody = RequestBody.create(new byte[23], MediaType.parse("application/octet-stream"));
-        RequestBody fileBody = RequestBody.create(new File(filePath), MediaType.parse(mime));
+        // 旧写法
+//        RequestBody byteBody = RequestBody.create(new byte[23], MediaType.parse("application/octet-stream"));
+//        RequestBody fileBody = RequestBody.create(new File(filePath), MediaType.parse(mime));
+        // 这个是 Okhttp3 换成 kotlin 之后的写法
+        RequestBody byteBody = RequestBody.Companion.create(new byte[23], MediaType.Companion.parse("application/octet-stream"));
+        RequestBody fileBody = RequestBody.Companion.create(new File(filePath), MediaType.Companion.parse(mime));
 //        RequestBody fileBody = RequestBody.create(MediaType.parse("image/jpeg"), new File(filePath));
         //这么设置不太正确
 //        RequestBody byteBody = RequestBody.create(MediaType.parse("multipart/form-data"), new byte[23]);
