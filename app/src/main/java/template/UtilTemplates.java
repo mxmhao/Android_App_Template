@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.StatFs;
 import android.speech.tts.TextToSpeech;
@@ -464,5 +465,15 @@ public class UtilTemplates {
 
         // 以‘a’或‘A’ 结尾表示安卓端。
         return sb.toString();
+    }
+
+    // 创建不在主线程工作的 Handler
+    public static Handler workThreadHandler() {
+        HandlerThread handlerThread = new HandlerThread("Not main Handler");
+        handlerThread.start();
+//        handlerThread.quit();// 退出
+        // 将handler绑定到子线程中
+        Handler handler = new Handler(handlerThread.getLooper());
+        return handler;
     }
 }
