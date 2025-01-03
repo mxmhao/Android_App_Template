@@ -13,6 +13,7 @@ import android.view.Window;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -34,8 +35,11 @@ public class TranslucentBarActivity extends AppCompatActivity {
 //            ViewCompat.getWindowInsetsController(window.getDecorView()).setAppearanceLightStatusBars(true);
             // 抬高底部方式一：
             ViewCompat.setOnApplyWindowInsetsListener(window.getDecorView().findViewById(android.R.id.content), (v, insets) -> {
-                int navHeight = insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom;
-                v.setPadding(0, 0, 0, navHeight);
+                // displayCutout 是刘海区域
+                Insets systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
+                v.setPadding(0, 0, 0, systemInsets.bottom);
+                // 将内容限制在安全区域内，window.getDecorView().findViewById(android.R.id.content) 可能要换成其子视图
+//                v.setPadding(systemInsets.left, systemInsets.top, systemInsets.right, systemInsets.bottom);
                 return insets;
             });
 //            // 高亮显示状态栏，字体黑色
