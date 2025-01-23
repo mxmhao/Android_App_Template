@@ -36,47 +36,6 @@ public class AES {
     private static final String TAG = "AES";
 
     private final static String SHA1_PRNG = "SHA1PRNG";
-    private static final int KEY_SIZE = 32;
-
-    /**
-     * Aes加密/解密
-     *
-     * @param content  字符串
-     * @param secretKey 密钥
-     * @param type     加密：{@link Cipher#ENCRYPT_MODE}，解密：{@link Cipher#DECRYPT_MODE}
-     * @return 加密/解密结果字符串
-     * @deprecated 方法已过时，不要使用了
-     */
-    @SuppressLint({"DeletedProvider", "GetInstance"})
-    public static String des(String content, String secretKey, @AESType int type) {
-        if (TextUtils.isEmpty(content) || TextUtils.isEmpty(secretKey)) {
-            return null;
-        }
-        try {
-            SecretKeySpec secretKeySpec;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {//Crypto provider 在 Android N（7.0）中已弃用，在Android P（9.0） 中已删除。
-                secretKeySpec = deriveKeyInsecurely(secretKey);
-            } else {
-                secretKeySpec = fixSmallVersion(secretKey);
-            }
-            Cipher cipher = Cipher.getInstance("AES");//AES/CBC/PKCS5Padding会报错？
-            cipher.init(type, secretKeySpec);
-            if (type == Cipher.ENCRYPT_MODE) {//加密
-                byte[] byteContent = content.getBytes("utf-8");
-                return byte2HexString(cipher.doFinal(byteContent));
-            } else {//解密
-                byte[] byteContent = hexString2Byte(content);
-                return new String(cipher.doFinal(byteContent));
-            }
-        } catch (NoSuchAlgorithmException | BadPaddingException | IllegalBlockSizeException |
-                UnsupportedEncodingException | InvalidKeyException | NoSuchPaddingException |
-                NoSuchProviderException e) {
-            if (BuildConfig.DEBUG) {
-                Log.e(TAG, "des: ", e);
-            }
-        }
-        return null;
-    }
 
     /*
      * 生成随机数，可以当做动态的密钥 加密和解密的密钥必须一致，不然将不能解密
@@ -92,26 +51,6 @@ public class AES {
             e.printStackTrace();
         }
         return null;
-    }
-
-    @SuppressLint("DeletedProvider")
-    private static SecretKeySpec fixSmallVersion(String secretKey) throws NoSuchAlgorithmException, NoSuchProviderException {
-        KeyGenerator generator = KeyGenerator.getInstance("AES");
-        SecureRandom secureRandom;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            secureRandom = SecureRandom.getInstance(SHA1_PRNG, new CryptoProvider());
-        } else {
-            secureRandom = SecureRandom.getInstance(SHA1_PRNG, "Crypto");
-        }
-        secureRandom.setSeed(secretKey.getBytes());
-        generator.init(128, secureRandom);
-        byte[] enCodeFormat = generator.generateKey().getEncoded();
-        return new SecretKeySpec(enCodeFormat, "AES");
-    }
-
-    private static SecretKeySpec deriveKeyInsecurely(String secretKey) {
-        byte[] passwordBytes = secretKey.getBytes(StandardCharsets.US_ASCII);
-        return new SecretKeySpec(InsecureSHA1PRNGKeyDerivator.deriveInsecureKey(passwordBytes, KEY_SIZE), "AES");
     }
 
     private static final char[] hex = new char[]{
@@ -177,17 +116,6 @@ public class AES {
             throw new NumberFormatException("For input char: \"" + codePoint + "\"");
         }
         return result;
-    }
-
-    @IntDef({Cipher.ENCRYPT_MODE, Cipher.DECRYPT_MODE})
-    @interface AESType {}
-
-    private static final class CryptoProvider extends Provider {
-        CryptoProvider() {
-            super("Crypto", 1.0, "HARMONY (SHA1 digest; SecureRandom; SHA1withDSA signature)");
-            put("SecureRandom.SHA1PRNG", "org.apache.harmony.security.provider.crypto.SHA1PRNG_SecureRandomImpl");
-            put("SecureRandom.SHA1PRNG ImplementedIn", "Software");
-        }
     }
 
     // 向量
