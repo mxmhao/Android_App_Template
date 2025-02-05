@@ -18,7 +18,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import test.mxm.android_app_template.R;
+import min.test.android_app_template.R;
 
 public class TranslucentBarActivity extends AppCompatActivity {
 

@@ -6,7 +6,7 @@ import android.view.View;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
-import test.mxm.android_app_template.R;
+import min.test.android_app_template.R;
 
 public class BottomSheetDialogTheme {
 

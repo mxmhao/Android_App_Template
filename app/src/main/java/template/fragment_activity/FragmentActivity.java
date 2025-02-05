@@ -10,8 +10,6 @@ import android.util.LongSparseArray;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import test.mxm.android_app_template.BuildConfig;
-
 //使用final后，编译器会有方法内联优化
 public final class FragmentActivity extends AppCompatActivity {
 
@@ -39,9 +37,7 @@ public final class FragmentActivity extends AppCompatActivity {
                     .add(android.R.id.content, fragment)
                     .commit();
         } catch (IllegalAccessException | InstantiationException | ClassNotFoundException e) {
-            if (BuildConfig.DEBUG) {
-                Log.e(TAG, "", e);
-            }
+            Log.e(TAG, "", e);
         }
     }
 

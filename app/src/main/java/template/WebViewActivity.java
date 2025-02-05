@@ -26,7 +26,6 @@ import androidx.annotation.RequiresApi;
 import java.io.IOException;
 import java.util.HashMap;
 
-import test.mxm.android_app_template.BuildConfig;
 
 /*
 Cordova（https://github.com/apache/cordova-android）项目源码是一个巨大的教科书，
@@ -89,9 +88,8 @@ public class WebViewActivity extends Activity {
 
             @Override//解决部分机型打开Url会提示使用外部浏览器
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (BuildConfig.DEBUG) {
-                    Log.e(TAG, "shouldOverrideUrlLoading: " + url);
-                }
+                Log.e(TAG, "shouldOverrideUrlLoading: " + url);
+
                 HashMap<String, String> header = new HashMap<>();
                 header.put("", "");
                 view.loadUrl(url);
@@ -232,9 +230,7 @@ public class WebViewActivity extends Activity {
     }
 
     private void showErrorAlert() {
-        if (BuildConfig.DEBUG) {
-            Log.e(TAG, "showErrorAlert: ");
-        }
+        Log.e(TAG, "showErrorAlert: ");
         //弹出报错框
     }
 

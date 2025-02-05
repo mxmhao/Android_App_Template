@@ -9,8 +9,6 @@ import androidx.annotation.NonNull;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import test.mxm.android_app_template.BuildConfig;
-
 /**
  * 借用的源码：
  * https://github.com/kaedea/Feya/blob/master/feya/applications/droid.feya/src/main/java/me/kaede/feya/context/Applications.java
@@ -34,10 +32,8 @@ public class Applications {
             return CURRENT;
         }
         if (sAttached != null) {
-            if (BuildConfig.DEBUG) {
-                Log.w(TAG, "Seems CURRENT is null here, you may call Applications#context() before or " +
-                        "inside Application#attachBaseContext(Context), which is not recommended.");
-            }
+            Log.w(TAG, "Seems CURRENT is null here, you may call Applications#context() before or " +
+                    "inside Application#attachBaseContext(Context), which is not recommended.");
             return sAttached;
         }
         throw new IllegalStateException("Please make sure you do not call Applications#context() " +

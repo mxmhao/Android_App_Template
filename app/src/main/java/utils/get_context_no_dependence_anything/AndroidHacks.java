@@ -8,8 +8,6 @@ import androidx.annotation.NonNull;
 
 import java.lang.reflect.Method;
 
-import test.mxm.android_app_template.BuildConfig;
-
 /**
  * 借用的源码：
  * https://github.com/kaedea/Feya/blob/master/feya/applications/droid.feya/src/main/java/me/kaede/feya/context/AndroidHacks.java
@@ -45,9 +43,7 @@ public class AndroidHacks {
                         AndroidHacks.class.wait();
                     }
                 } catch (InterruptedException e) {
-                    if (BuildConfig.DEBUG) {
-                        Log.e(TAG, "Waiting notification from UI thread error.", e);
-                    }
+                    Log.e(TAG, "Waiting notification from UI thread error.", e);
                 }
             }
         }
@@ -61,10 +57,8 @@ public class AndroidHacks {
             method.setAccessible(true);
             activityThread = method.invoke(null);
         } catch (final Exception e) {
-            if (BuildConfig.DEBUG) {
-                Log.e(TAG, "Failed to get ActivityThread from ActivityThread#currentActivityThread. " +
-                        "In some case, this method return null in worker thread.", e);
-            }
+            Log.e(TAG, "Failed to get ActivityThread from ActivityThread#currentActivityThread. " +
+                    "In some case, this method return null in worker thread.", e);
         }
         return activityThread;
     }

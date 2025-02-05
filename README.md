@@ -46,7 +46,7 @@
 31. [自定义悬浮可拖动按钮；FloatDragBtnActivity.java](/app/src/main/java/template/FloatDragBtnActivity.java)  
 32. [安卓自带图片选择器的正确打开方式；ImagePickActivity.java](/app/src/main/java/template/ImagePickActivity.java)  
 33. [EditText输入限制；UtilTemplates.java#editTextLimiter](/app/src/main/java/template/UtilTemplates.java#L368)  
-34. [把本地 aar 文件发布到本地 maven 源，可以像远程 maven 库一样引入](/app/build.gradle#L64)
+34. [把本地 aar 文件发布到本地 maven 源，可以像远程 maven 库一样引入](/publishingTemp/build.gradle.kts)
 35. [keystore文件的指纹计算方法](/app/src/main/java/template/FingerprintUtils.java)
 36. [RxJava3使用](/app/src/main/java/template/RxJava3Templates.java)
 37. [创建一种不在主线程工作的 Handler，子线程 Handler，非主线程 Handler](/app/src/main/java/template/UtilTemplates.java#471)

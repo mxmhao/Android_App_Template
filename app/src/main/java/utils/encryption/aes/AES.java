@@ -24,8 +24,6 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import test.mxm.android_app_template.BuildConfig;
-
 /*
 * 安卓系统提供了多种密钥算法：
 * https://developer.android.google.cn/guide/topics/security/cryptography

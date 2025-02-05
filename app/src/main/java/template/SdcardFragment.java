@@ -13,8 +13,6 @@ import androidx.fragment.app.Fragment;
 
 import java.io.File;
 
-import test.mxm.android_app_template.BuildConfig;
-
 /**
  * 获取外置SD卡的绝对路径模板
  */
@@ -38,10 +36,8 @@ public class SdcardFragment extends Fragment {
         File[] files = context.getExternalFilesDirs(null);// 传参Environment.MEDIA_MOUNTED ？
         if (files.length < 2) return;//没有外置SD卡
 
-        if (BuildConfig.DEBUG) {
-            for (File f: files) {
-                Log.e(TAG, "choose: " + f.getPath());
-            }
+        for (File f: files) {
+            Log.e(TAG, "choose: " + f.getPath());
         }
 
         String sdcard = files[1].getPath();//如果有多张外置SD卡，下标就是1，2，3，4，.....
@@ -68,11 +64,9 @@ public class SdcardFragment extends Fragment {
         }
 
         Uri fileUri = data.getData();
-        if (BuildConfig.DEBUG) {
-            Log.e(TAG, "onActivityResult: " + fileUri.getPath()
+        Log.e(TAG, "onActivityResult: " + fileUri.getPath()
                 + " : " + fileUri.getAuthority()
                 + " : " + fileUri.getScheme());
-        }
         //把Uri转换成文件的绝对路径，Google，也可参考FileMultipleSelectionFragment.java中的转换
     }
 }

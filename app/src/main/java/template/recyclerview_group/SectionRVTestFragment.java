@@ -14,8 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import test.mxm.android_app_template.BuildConfig;
-
 public class SectionRVTestFragment extends Fragment implements SectionRVAdapter.OnItemInteractionListener {
 
     private Context context;
@@ -141,14 +139,10 @@ public class SectionRVTestFragment extends Fragment implements SectionRVAdapter.
 
     @Override
     public void OnItemClick(int section, int row, Object data) {
-        if (BuildConfig.DEBUG) {
-            Log.e("OnItemClick", section + "," + row);
-        }
+        Log.e("OnItemClick", section + "," + row);
     }
     @Override
     public void OnItemLongClick(int section, int row, Object data) {
-        if (BuildConfig.DEBUG) {
-            Log.e("OnItemLongClick", section + "," + row);
-        }
+        Log.e("OnItemLongClick", section + "," + row);
     }
 }

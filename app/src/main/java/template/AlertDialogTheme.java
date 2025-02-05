@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import androidx.annotation.StringRes;
 
-import test.mxm.android_app_template.R;
+import min.test.android_app_template.R;
 
 //https://www.jianshu.com/p/06a3bbb7ce79
 public class AlertDialogTheme {

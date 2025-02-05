@@ -145,9 +145,7 @@ public class DownloadUtils {
         try {
             runtime.exec(command);
         } catch (IOException e) {
-            if (BuildConfig.DEBUG) {
-                Log.e(TAG, "setPermission: ", e);
-            }
+            Log.e(TAG, "setPermission: ", e);
         }
     }*/
 

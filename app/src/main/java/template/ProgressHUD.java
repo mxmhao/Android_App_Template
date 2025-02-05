@@ -13,7 +13,7 @@ import android.widget.ProgressBar;
 
 import java.lang.ref.WeakReference;
 
-import test.mxm.android_app_template.R;
+import min.test.android_app_template.R;
 
 public class ProgressHUD {
 

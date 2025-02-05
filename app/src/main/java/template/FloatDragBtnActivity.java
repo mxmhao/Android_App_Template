@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import test.mxm.android_app_template.R;
+import min.test.android_app_template.R;
 
 public class FloatDragBtnActivity extends AppCompatActivity {
 
