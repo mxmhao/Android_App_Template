@@ -19,6 +19,7 @@ import android.text.format.Formatter;
 import android.text.method.DigitsKeyListener;
 import android.util.Log;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.StringRes;
 
@@ -35,6 +36,7 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.Random;
 
 import javax.net.ssl.KeyManager;
@@ -475,5 +477,53 @@ public class UtilTemplates {
         // 将handler绑定到子线程中
         Handler handler = new Handler(handlerThread.getLooper());
         return handler;
+    }
+
+    // 用法一：
+    public static void userOptional(Context context, A a) {
+        TextView tv = new TextView(context);
+        // 原来的写法
+        if (null != a) {
+            if (null != a.b) {
+                if (null != a.b.c) {
+                    if (null != a.b.c.name) {
+                        tv.setText(a.b.c.name);
+                    }
+                }
+            }
+        }
+        // 其实可以这么写，上面只是假设
+//        if (null != a && null != a.b && null != a.b.c && null != a.b.c.name) {
+//        }
+        // 使用 Optional 写法，改善了多层嵌套
+        Optional.ofNullable(a)
+                .map(a1 -> a1.b) // map 转换操作
+                .map(b1 -> b1.c)
+                .map(c1 -> c1.name)
+                .ifPresent(tv::setText); // 设置值
+
+        Optional.ofNullable(a)
+                .flatMap(a1 -> a1.getAddress(context))
+                .ifPresent(tv::setText); // 设置值
+    }
+
+    public static class A {
+        public B b;
+        // 用法二：把 Optional 作为返回值，然后就可以像'用法一'那样操作了
+        public Optional<String> getAddress(Context context) {
+            if (null != context) {
+                return Optional.of("aaaaa");
+            }
+
+            return Optional.empty();
+        }
+    }
+
+    public static class B {
+        public C c;
+    }
+
+    public static class C {
+        public String name;
     }
 }

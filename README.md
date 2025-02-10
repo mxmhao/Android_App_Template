@@ -50,6 +50,7 @@
 35. [keystore文件的指纹计算方法](/app/src/main/java/template/FingerprintUtils.java)
 36. [RxJava3使用](/app/src/main/java/template/RxJava3Templates.java)
 37. [创建一种不在主线程工作的 Handler，子线程 Handler，非主线程 Handler](/app/src/main/java/template/UtilTemplates.java#471)
+38. [Java Optional类的用法](/app/src/main/java/template/UtilTemplates.java#483)
 
 
 ## 长见识（自己去搜，去了解，去使用）
