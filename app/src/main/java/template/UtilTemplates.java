@@ -510,6 +510,7 @@ public class UtilTemplates {
     public static class A {
         public B b;
         // 用法二：把 Optional 作为返回值，然后就可以像'用法一'那样操作了
+        // Swift 和 kotlin 等语言有语法糖，Optional<String> 可以写成 "String?"，其本质还是 Optional<String>
         public Optional<String> getAddress(Context context) {
             if (null != context) {
                 return Optional.of("aaaaa");
