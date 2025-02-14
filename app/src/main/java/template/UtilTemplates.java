@@ -18,7 +18,11 @@ import android.text.InputType;
 import android.text.format.Formatter;
 import android.text.method.DigitsKeyListener;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import androidx.annotation.StringRes;
@@ -45,6 +49,8 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
+
+import min.test.android_app_template.databinding.LayoutPopupWindowBinding;
 
 public class UtilTemplates {
     private static final String TAG = "UtilTemplates";
@@ -526,5 +532,13 @@ public class UtilTemplates {
 
     public static class C {
         public String name;
+    }
+
+    private void showSelectDialog(View view, LayoutInflater layoutInflater, ViewGroup parentView) {
+        // 这个里面的布局也有讲究，注意查看。parentView最好要有，它能保证立刻计算 binding.getRoot() 和其子视图的 frame
+        LayoutPopupWindowBinding binding = LayoutPopupWindowBinding.inflate(layoutInflater, parentView, false);
+        PopupWindow window = new PopupWindow(binding.getRoot(), ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        // view 一般是事件触发的view，比如被点击的那个按钮
+        window.showAsDropDown(view);
     }
 }
