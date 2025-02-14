@@ -538,6 +538,9 @@ public class UtilTemplates {
         // 这个里面的布局也有讲究，注意查看。parentView最好要有，它能保证立刻计算 binding.getRoot() 和其子视图的 frame
         LayoutPopupWindowBinding binding = LayoutPopupWindowBinding.inflate(layoutInflater, parentView, false);
         PopupWindow window = new PopupWindow(binding.getRoot(), ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        binding.getRoot().setOnClickListener(v -> {
+            window.dismiss();
+        });
         // view 一般是事件触发的view，比如被点击的那个按钮
         window.showAsDropDown(view);
     }
