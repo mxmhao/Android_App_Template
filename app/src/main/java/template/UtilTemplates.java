@@ -27,6 +27,8 @@ import android.widget.TextView;
 
 import androidx.annotation.StringRes;
 
+import com.google.android.material.tabs.TabLayoutMediator;
+
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
@@ -51,6 +53,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 
 import min.test.android_app_template.databinding.LayoutPopupWindowBinding;
+import min.test.android_app_template.databinding.LayoutTablayoutViewpage2Binding;
 
 public class UtilTemplates {
     private static final String TAG = "UtilTemplates";
@@ -543,5 +546,22 @@ public class UtilTemplates {
         });
         // view 一般是事件触发的view，比如被点击的那个按钮
         window.showAsDropDown(view);
+    }
+
+    public static void testTabLayout(Context context, LayoutInflater layoutInflater, ViewGroup parentView) {
+        // 具体可查看xml文件，自定义了 tabLayout 指示器，去掉了点击的水波纹效果
+        LayoutTablayoutViewpage2Binding binding = LayoutTablayoutViewpage2Binding.inflate(layoutInflater, parentView, false);
+        // ViewPager2 包裹最大的 View，就能保证无上下滑动
+        View[] views = new View[] {new View(context), new View(context), new View(context)};
+        ControlAdapter adapter = new ControlAdapter(views);
+        binding.viewpager.setAdapter(adapter);
+        String[] titles = new String[] {"tab1", "tab2", "tab3"};
+        new TabLayoutMediator(binding.tabLayout, binding.viewpager,
+                (tab, position) -> {
+                    tab.setText(titles[position]);// 必须要用这种方式设置，否则可能title无效
+                    // 去掉长按？
+                    tab.view.setOnLongClickListener(v -> true);
+                }
+        ).attach();
     }
 }

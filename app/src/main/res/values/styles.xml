@@ -96,4 +96,10 @@
         <!-- 这个属性在8.0之前可以当成简单的启动页 -->
         <!--<item name="android:windowBackground">@drawable/launcher_splash</item>-->
     </style>
+
+    <style name="Theme.TabLayout" parent="@style/Widget.Material3.TabLayout">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">#ff0000</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
 </resources>

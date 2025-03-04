@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- gravity="center" 效果是可以裁剪四周，不会用贴合填充模式导致图片变形 -->
+    <item android:width="20dp" android:height="6dp" android:gravity="center">
+        <shape>
+            <corners android:radius="6dp" />
+            <solid android:color="#ffff00" />
+        </shape>
+    </item>
+</layer-list>

@@ -52,6 +52,7 @@
 37. [创建一种不在主线程工作的 Handler，子线程 Handler，非主线程 Handler](/app/src/main/java/template/UtilTemplates.java#L481)
 38. [Java Optional类的用法](/app/src/main/java/template/UtilTemplates.java#L493)
 39. [自定义弹框 PopupWindow ](/app/src/main/java/template/UtilTemplates.java#L537)
+40. [TabLayout + ViewPager2 使用](/app/src/main/java/template/UtilTemplates.java#L551)
 
 
 ## 长见识（自己去搜，去了解，去使用）
