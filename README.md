@@ -53,6 +53,7 @@
 38. [Java Optional类的用法](/app/src/main/java/template/UtilTemplates.java#L493)
 39. [自定义弹框 PopupWindow ](/app/src/main/java/template/UtilTemplates.java#L537)
 40. [TabLayout + ViewPager2 使用](/app/src/main/java/template/UtilTemplates.java#L551)
+41. [圆环倒计时动画](/app/src/main/java/template/CircleProgressView.java)
 
 
 ## 长见识（自己去搜，去了解，去使用）
