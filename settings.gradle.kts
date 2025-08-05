@@ -5,6 +5,7 @@ pluginManagement {
         maven ( url = "https://maven.aliyun.com/repository/public/")
         maven ( url = "https://maven.aliyun.com/repository/google/")
         maven ( url = "https://repo.huaweicloud.com/repository/maven/")
+        maven ( url = "https://maven.pkg.jetbrains.space/public/p/compose/dev")
         google {
             content {
                 includeGroupByRegex("com\\.android.*")
@@ -26,6 +27,7 @@ dependencyResolutionManagement {
         maven ( url = "https://maven.aliyun.com/repository/public/")
         maven ( url = "https://maven.aliyun.com/repository/google/")
         maven ( url = "https://repo.huaweicloud.com/repository/maven/")
+        maven ( url = "https://maven.pkg.jetbrains.space/public/p/compose/dev")
         maven ( url = "https://jitpack.io")
         maven ( url = uri("./LocalMavenRepo"))
         google()
