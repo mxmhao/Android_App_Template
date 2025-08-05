@@ -65,4 +65,4 @@
 6. Android 官方性能监控和检测，也介绍了要引入的库[https://developer.android.google.cn/topic/performance/inspecting-overview?hl=zh-cn](https://developer.android.google.cn/topic/performance/inspecting-overview?hl=zh-cn)
 7. 自定义指定 JDK Home 路径可以在项目根目录的[gradle.properties](gradle.properties)中添加 org.gradle.java.home 参数
 8. 第三方依赖下载加速，阿里云 Maven 仓库镜像介绍：[https://developer.aliyun.com/mvn/guide](https://developer.aliyun.com/mvn/guide)。 有些源没有及时同步国外的源，导致有些库文件还是会从国外源下载，所以多配几个国内源，降低这种概率，说不定总有一个源及时同步了。建议用 Android Studio 内的按钮去同步下载第三方库，不要用 gradlew build 等命令去同步下载第三方库，因为奇怪的JDK环境可能导致一些奇奇怪怪的问题导致同步失败。第一次同步最好打开 Android Studio 的 build 视图，查看 Download info，及时发现哪些库会最终使用国外源，可及时打开代理或者VPN等。
-9. gradle 下载加速，腾讯云 gradle 下载地址，按需更新链接中的版本号即可：[https://mirrors.cloud.tencent.com/gradle/gradle-7.6.3-all.zip](https://mirrors.cloud.tencent.com/gradle/gradle-7.6.3-all.zip)
+9. gradle 下载加速，腾讯云 gradle 下载地址，按需更新链接中的版本号即可：[https://mirrors.cloud.tencent.com/gradle/gradle-7.6.3-all.zip](https://mirrors.cloud.tencent.com/gradle/gradle-7.6.3-all.zip) 。必须使用"-all.zip"文件，否则项目同步还是会下载 gradle 的 src 依赖
