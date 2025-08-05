@@ -1,7 +1,17 @@
 // https://developer.android.google.cn/studio/projects/android-library
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+}
+
+// 上面要 import
+val keystoreProperties = Properties()
+// 自定义keystore本地配置。放在项目根目录下
+val file = rootProject.file("keystore.properties");
+if (file.exists()) {
+    file.inputStream().use { keystoreProperties.load(it) }
 }
 
 android {
@@ -50,6 +60,23 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+    // 必须放在 buildTypes 上面
+    signingConfigs {
+        // release 不存在要自己创建
+        create("release") {
+            keyAlias = keystoreProperties["keyAlias"] as String
+            keyPassword = keystoreProperties["keyPassword"] as String
+            storeFile = keystoreProperties["storeFile"]?.let { file(it) }
+            storePassword = keystoreProperties["storePassword"] as String
+        }
+        // debug 本身就有
+        getByName("debug") {
+            keyAlias = keystoreProperties["keyAlias"] as String
+            keyPassword = keystoreProperties["keyPassword"] as String
+            storeFile = keystoreProperties["storeFile"]?.let { file(it) }
+            storePassword = keystoreProperties["storePassword"] as String
+        }
+    }
 
     buildTypes {
         release {
@@ -58,6 +85,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
@@ -89,6 +117,10 @@ dependencies {
     implementation(libs.androidx.exifinterface)
     implementation(libs.rxjava)
     implementation(libs.rxandroid)
+    // fileTree 写法
+    implementation(fileTree("libs") {
+        include("*.aar", "*.jar")
+    })
 
     // 在 Android Studio 中准确衡量代码性能, 性能测试框架
     androidTestImplementation(libs.androidx.benchmark.macro.junit4)

@@ -30,6 +30,10 @@ dependencyResolutionManagement {
         maven ( url = uri("./LocalMavenRepo"))
         google()
         mavenCentral()
+        // 本地 libs
+        flatDir {
+            dirs("libs")
+        }
     }
 }
 
